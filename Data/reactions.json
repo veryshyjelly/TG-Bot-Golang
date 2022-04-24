@@ -1,0 +1,379 @@
+{
+	"data": [
+		{
+			"chat_id": -703095609,
+			"filters": [
+				{
+					"file_id": "CgACAgQAAxkBAAIG9mJjlMI1YPHHv4RUfkClfDHQd8UYAALcAgACxpk9Ux0OsUH4Gy52JAQ",
+					"trigger": "moon",
+					"file_type": "animation"
+				},
+				{
+					"file_id": "CAACAgIAAxkBAAIHW2JjoF4lIY1nJX2ermTM7TFxc2K8AAIrDwACcxNRS9iNh5QNOsUPJAQ",
+					"trigger": "hui hui",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "AgACAgUAAxkBAAIHamJjoOPWmNV4aelbYGZpmAUZwT0PAALyrzEb8ikgV6GgIYLkaDW-AQADAgADcwADJAQ",
+					"trigger": "botspam",
+					"file_type": "photo"
+				}
+			]
+		},
+		{
+			"chat_id": -1001253765425,
+			"filters": [
+				{
+					"file_id": "CAACAgIAAx0CSrrxMQACONxiY5mX36ZXVDqjoVFp0vWK96TeowACKw8AAnMTUUvYjYeUDTrFDyQE",
+					"trigger": "hui hui",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgIAAx0CSrrxMQACONxiY5mX36ZXVDqjoVFp0vWK96TeowACKw8AAnMTUUvYjYeUDTrFDyQE",
+					"trigger": "hui",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACNPdiY5nS5UsplkX6KLJEW0iRlQPO2QACrQUAAvNoYVY-1ytBF4LbSCQE",
+					"trigger": "boom",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOOJiY5nkDY3aY76uLnUeXLYlZ-fXZgACegIAAmBSUVVrXxgIQhhP2SQE",
+					"trigger": "stares",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOPdiY5puzo2JHslr8l6pKsBcGfIR8gACLQUAArYGMFUJavcabzdJNCQE",
+					"trigger": "ubuntu",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOP5iY5sjvWabHj2XztQHfYESAAEgeZQAAqAEAAIYUShVyPy-QUlnysMkBA",
+					"trigger": "f",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOQJiY5tKUyUEPU_1YdEPzAABNK8Yh7sAAvkZAAKCY_45ZK1AIYogTk0kBA",
+					"trigger": "aa jao sab",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOQhiY5t7IfWjzzlxtbAGYMnyPJlffwAC6wgAAhoyuVUYh6tngnU4WiQE",
+					"trigger": "noicee",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACORtiY6fryagXdyVn3Ttbb0lSqQteOwAC6gMAAsILYFbCmII83S6j1iQE",
+					"trigger": "ee",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOT9iY6itSzGazictXHxvPjBakplYGQACgQYAAkz26Fav_qC-FSMKfCQE",
+					"trigger": "chull",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOUpiY6kF5ESGKVapMymxLIMTZlHyCwAC-xkAAoJj_jkjr0YnwYUUdyQE",
+					"trigger": "tiktok",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOXliY6nt8fjiLUjf22gh4EkAARc3DvQAAhIEAAJnlyFVevtl47arM3IkBA",
+					"trigger": "han",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOaNiY6qG4BJ8_XpBa0ad1wjPmKD5dwACiAEAAlaTAAFU3X9iPNXs5RQkBA",
+					"trigger": "anime",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACObhiY6sC_bBXsa6GUOuaINJwYaoaTgACAhoAAoJj_jkk_h9VAAH_gVwkBA",
+					"trigger": "admin",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACObpiY6sJxrhw7m-_tIoPIdcqO0bgngAC8wQAAsxY8FYJNJ56yrKyKyQE",
+					"trigger": "hey",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOftiY6yzEwz3SkFWq853ff0E-Ak_yQACewcAApbhCFfFHPmYk1O_7SQE",
+					"trigger": "bawla",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOftiY6yzEwz3SkFWq853ff0E-Ak_yQACewcAApbhCFfFHPmYk1O_7SQE",
+					"trigger": "bawli",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOgFiY6z8P-j17bsXPlVS9Y0DJhCKQAAChQIAAqR42Vb_fVwqpAt4NSQE",
+					"trigger": "chai",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOhViY663XqQ8E6WV3D89qJ3Wrs8VMwACqAIAAvdEIVZIOQpakjHDPSQE",
+					"trigger": "good morning",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOhdiY69GVocfTJ64RYxqd-kxNfXCGAACzB4AAoJj_jmvZmTj6kCfTSQE",
+					"trigger": "jai shree ram",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0ESrrxMQACOjViY72mMNFO7vg6fYVXZwKhd5KCagAC6wgAAhoyuVUYh6tngnU4WiQE",
+					"trigger": "noice",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOjtiY8BxZPN72A4nbTBlzPSGEbJc7QAC8AUAAmoZGFchaCUvUId8eiQE",
+					"trigger": "gm",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CgACAgQAAx0CSrrxMQACOsBiY8dHRXLWbk6Y7MXfU8A3UI6tlwACGAMAAuYYBFMbcQM34h6A3iQE",
+					"trigger": "kuch bhi",
+					"file_type": "animation"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOtpiY8fPqeYn2Hui0aEYgxPLkprlRAAC6wgAAhoyuVUYh6tngnU4WiQE",
+					"trigger": "awesome",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOvBiY8gJqmqzLHlANVDpN_cPs0wLDQACewUAAp1tMFUp_Es1SeMaYiQE",
+					"trigger": "lol",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOv1iY8gq0dnQxD_iOoT4o5P2Of_QEQAC6gMAAsILYFbCmII83S6j1iQE",
+					"trigger": "hehe",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOzViY8lIwj5noLPizroz7z-tTaxu5wAC5wYAAsoSIFdHvPfiwxrCLCQE",
+					"trigger": "she said",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACO1ZiY8oAAV9ss7ZV47REnCzpNER4msoAApEFAAK7ytBU1A1hsxUMLBEkBA",
+					"trigger": "classy",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACO19iY8o4hpL9gWFqlBtC5JYtLZ85qgACOAUAAsxGMFUCjJTEHhIAAZIkBA",
+					"trigger": "lmao",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACO4tiY8r9ECHSs56HtGqLoimliKeNTQACugADvO0tICkKTm_326rhJAQ",
+					"trigger": "link",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACO4xiY8sCA_uUo7tnqJ24_DojhqD9PQAC5wYAAsoSIFdHvPfiwxrCLCQE",
+					"trigger": "its hard",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACO5hiY8tDx5-s1JbLpG5qtOU3EzW0ZwAC_gADvO0tIKz-AunH68dMJAQ",
+					"trigger": "chewtiye",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACO6ViY8vFAmK4E6ewYaPdN6EAAUUTj_QAAjMAA-0CVzf9sj-Fdf_spSQE",
+					"trigger": "ded",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACO-hiY9pEqEsfINBE83G0NX_LgDOy9wACQAMAAnEaUFWbZdf_lnTd1SQE",
+					"trigger": "coding",
+					"file_type": "sticker"
+				}
+			]
+		},
+		{
+			"chat_id": -1001684508017,
+			"filters": [
+				{
+					"file_id": "CAACAgIAAx0CSrrxMQACONxiY5mX36ZXVDqjoVFp0vWK96TeowACKw8AAnMTUUvYjYeUDTrFDyQE",
+					"trigger": "hui hui",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgIAAx0CSrrxMQACONxiY5mX36ZXVDqjoVFp0vWK96TeowACKw8AAnMTUUvYjYeUDTrFDyQE",
+					"trigger": "hui",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACNPdiY5nS5UsplkX6KLJEW0iRlQPO2QACrQUAAvNoYVY-1ytBF4LbSCQE",
+					"trigger": "boom",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOOJiY5nkDY3aY76uLnUeXLYlZ-fXZgACegIAAmBSUVVrXxgIQhhP2SQE",
+					"trigger": "stares",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOPdiY5puzo2JHslr8l6pKsBcGfIR8gACLQUAArYGMFUJavcabzdJNCQE",
+					"trigger": "ubuntu",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOP5iY5sjvWabHj2XztQHfYESAAEgeZQAAqAEAAIYUShVyPy-QUlnysMkBA",
+					"trigger": "f",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOQJiY5tKUyUEPU_1YdEPzAABNK8Yh7sAAvkZAAKCY_45ZK1AIYogTk0kBA",
+					"trigger": "aa jao sab",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOQhiY5t7IfWjzzlxtbAGYMnyPJlffwAC6wgAAhoyuVUYh6tngnU4WiQE",
+					"trigger": "noicee",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACORtiY6fryagXdyVn3Ttbb0lSqQteOwAC6gMAAsILYFbCmII83S6j1iQE",
+					"trigger": "ee",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOT9iY6itSzGazictXHxvPjBakplYGQACgQYAAkz26Fav_qC-FSMKfCQE",
+					"trigger": "chull",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOUpiY6kF5ESGKVapMymxLIMTZlHyCwAC-xkAAoJj_jkjr0YnwYUUdyQE",
+					"trigger": "tiktok",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOXliY6nt8fjiLUjf22gh4EkAARc3DvQAAhIEAAJnlyFVevtl47arM3IkBA",
+					"trigger": "han",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOaNiY6qG4BJ8_XpBa0ad1wjPmKD5dwACiAEAAlaTAAFU3X9iPNXs5RQkBA",
+					"trigger": "anime",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACObhiY6sC_bBXsa6GUOuaINJwYaoaTgACAhoAAoJj_jkk_h9VAAH_gVwkBA",
+					"trigger": "admin",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACObpiY6sJxrhw7m-_tIoPIdcqO0bgngAC8wQAAsxY8FYJNJ56yrKyKyQE",
+					"trigger": "hey",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOgFiY6z8P-j17bsXPlVS9Y0DJhCKQAAChQIAAqR42Vb_fVwqpAt4NSQE",
+					"trigger": "chai",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOhViY663XqQ8E6WV3D89qJ3Wrs8VMwACqAIAAvdEIVZIOQpakjHDPSQE",
+					"trigger": "good morning",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOhdiY69GVocfTJ64RYxqd-kxNfXCGAACzB4AAoJj_jmvZmTj6kCfTSQE",
+					"trigger": "jai shree ram",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0ESrrxMQACOjViY72mMNFO7vg6fYVXZwKhd5KCagAC6wgAAhoyuVUYh6tngnU4WiQE",
+					"trigger": "noice",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOjtiY8BxZPN72A4nbTBlzPSGEbJc7QAC8AUAAmoZGFchaCUvUId8eiQE",
+					"trigger": "gm",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CgACAgQAAx0CSrrxMQACOsBiY8dHRXLWbk6Y7MXfU8A3UI6tlwACGAMAAuYYBFMbcQM34h6A3iQE",
+					"trigger": "kuch bhi",
+					"file_type": "animation"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOtpiY8fPqeYn2Hui0aEYgxPLkprlRAAC6wgAAhoyuVUYh6tngnU4WiQE",
+					"trigger": "awesome",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOvBiY8gJqmqzLHlANVDpN_cPs0wLDQACewUAAp1tMFUp_Es1SeMaYiQE",
+					"trigger": "lol",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOv1iY8gq0dnQxD_iOoT4o5P2Of_QEQAC6gMAAsILYFbCmII83S6j1iQE",
+					"trigger": "hehe",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACOzViY8lIwj5noLPizroz7z-tTaxu5wAC5wYAAsoSIFdHvPfiwxrCLCQE",
+					"trigger": "she said",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACO1ZiY8oAAV9ss7ZV47REnCzpNER4msoAApEFAAK7ytBU1A1hsxUMLBEkBA",
+					"trigger": "classy",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACO19iY8o4hpL9gWFqlBtC5JYtLZ85qgACOAUAAsxGMFUCjJTEHhIAAZIkBA",
+					"trigger": "lmao",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACO4tiY8r9ECHSs56HtGqLoimliKeNTQACugADvO0tICkKTm_326rhJAQ",
+					"trigger": "link",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACO4xiY8sCA_uUo7tnqJ24_DojhqD9PQAC5wYAAsoSIFdHvPfiwxrCLCQE",
+					"trigger": "its hard",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACO5hiY8tDx5-s1JbLpG5qtOU3EzW0ZwAC_gADvO0tIKz-AunH68dMJAQ",
+					"trigger": "chewtiye",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACO6ViY8vFAmK4E6ewYaPdN6EAAUUTj_QAAjMAA-0CVzf9sj-Fdf_spSQE",
+					"trigger": "ded",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CSrrxMQACO-hiY9pEqEsfINBE83G0NX_LgDOy9wACQAMAAnEaUFWbZdf_lnTd1SQE",
+					"trigger": "coding",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAx0CZGeNcQACFQliZBbPX8cv7nEMYWpar4jQsyQ0agACkQUAAmS9WFak-x0IUxO_OCQE",
+					"trigger": "mera sticker",
+					"file_type": "sticker"
+				}
+			]
+		},
+		{
+			"chat_id": -703095609,
+			"filters": [
+				{
+					"file_id": "CAACAgQAAxkBAAIHdGJjrJ0J3u17DXb6hValnxvQlXqkAAKAAAMG_uETgFAidwgQddokBA",
+					"trigger": "dance",
+					"file_type": "sticker"
+				}
+			]
+		}
+	]
+}
