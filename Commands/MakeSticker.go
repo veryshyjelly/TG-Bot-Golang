@@ -33,7 +33,6 @@ func MakeSticker(baseUrl, apiToken string, message *TgTypes.MessageType) (*TgTyp
 		}
 
 		imageLink = "https://api.telegram.org/file/bot" + apiToken + "/" + url.QueryEscape(imagePath.FilePath)
-		fmt.Println(imageLink)
 	} else if message.Sticker.FileId != "" && !message.Sticker.IsAnimated {
 		wasSticker = true
 		imagePath, err := Functions.GetFile(baseUrl, message.Sticker.FileId)
