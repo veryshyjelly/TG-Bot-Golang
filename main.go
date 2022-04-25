@@ -14,8 +14,7 @@ func main() {
 	apiToken := "5238894566:AAEvB2BgSISLA_tl_Cs6bpDU2lR66JbkMmI"
 	baseUrl := "https://api.telegram.org/bot" + apiToken
 	botName := "@AB22TGBot"
-	//var chat2 int64 = -703095609
-	//var chat1 int64 = -1001684508017
+
 	var offset, limit int64 = 0, 100
 	delay := 10
 	for {

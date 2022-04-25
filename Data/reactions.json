@@ -17,6 +17,16 @@
 					"file_id": "AgACAgUAAxkBAAIHamJjoOPWmNV4aelbYGZpmAUZwT0PAALyrzEb8ikgV6GgIYLkaDW-AQADAgADcwADJAQ",
 					"trigger": "botspam",
 					"file_type": "photo"
+				},
+				{
+					"file_id": "CAACAgUAAxkBAAINLGJmqmhfKxffBsP-g2luCrTAzN_cAAKxBQACp3M4V9rVNINgXXHNJAQ",
+					"trigger": "ubuntu",
+					"file_type": "sticker"
+				},
+				{
+					"file_id": "CAACAgUAAxkBAAINSGJmrX5Ps49mxCU4KcK7nIe1b94uAAIVBwACPW84Vw8tcO-e1Kp1JAQ",
+					"trigger": "hehe",
+					"file_type": "sticker"
 				}
 			]
 		},

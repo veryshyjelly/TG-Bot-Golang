@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -44,7 +43,6 @@ func AddStickerToSet(baseUrl, name, pngSticker, emoji string, userId int64) (boo
 		return false, err
 	}
 
-	fmt.Println(string(body))
 	if !data.Ok {
 		return false, errors.New(data.Description)
 	}
