@@ -91,3 +91,45 @@ func SendPhotoByUrl(baseUrl, photoUrl string, chatId, replyId int64, caption str
 	}
 	return &data.Result
 }
+
+func SendPhotoByReader(baseUrl string, photoPath *bytes.Buffer, message *TgTypes.MessageType, caption string, isProtected bool) *TgTypes.MessageType {
+	client := &http.Client{Timeout: time.Minute * 10}
+
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+
+	sendQuery := make(map[string]interface{})
+	sendQuery["chat_id"], sendQuery["reply_to_message_id"], sendQuery["caption"], sendQuery["protect_content"] = message.Chat.Id, message.MessageId, caption, false
+
+	for k, v := range sendQuery {
+		fw, err := writer.CreateFormField(k)
+		_, err = io.Copy(fw, strings.NewReader(fmt.Sprint(v)))
+		if err != nil {
+			log.Fatalln(err)
+		}
+	}
+
+	fw, err := writer.CreateFormFile("document", "resizing.png")
+	_, err = io.Copy(fw, photoPath)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	writer.Close()
+	req, err := http.NewRequest("POST", baseUrl+"/sendDocument", bytes.NewReader(body.Bytes()))
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	req.Header.Set("Content-Type", writer.FormDataContentType()) // Very very important step
+	rsp, _ := client.Do(req)
+	sendResult, err := ioutil.ReadAll(rsp.Body)
+	//fmt.Println(string(sendResult))
+
+	returnData := SendPhotoResult{}
+	err = json.Unmarshal(sendResult, &returnData)
+	if err != nil {
+		log.Fatalln(err)
+		return nil
+	}
+	return &returnData.Result
+}

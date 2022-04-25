@@ -1,7 +1,6 @@
 package Commands
 
 import (
-	features "Telegram-Bot/Features"
 	Functions "Telegram-Bot/Lib/TgFunctions"
 	"Telegram-Bot/Lib/TgTypes"
 	"encoding/json"
@@ -15,7 +14,7 @@ func ReactionList(baseUrl string, message *TgTypes.MessageType) {
 		//fmt.Println("File is not found")
 		log.Fatalln(err)
 	}
-	data := features.FilterDataArray{}
+	data := FilterDataArray{}
 	err = json.Unmarshal(storage, &data)
 
 	res := "List of filter in " + message.Chat.Title + ":\n"

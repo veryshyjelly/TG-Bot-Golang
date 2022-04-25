@@ -14,7 +14,7 @@ type SendMessageResult struct {
 	Result TgTypes.MessageType `json:"result"`
 }
 
-func SendTextMessage(baseUrl, text string, chatId int64, replyId int64) TgTypes.MessageType {
+func SendTextMessage(baseUrl, text string, chatId int64, replyId int64) *TgTypes.MessageType {
 	sendQuery := new(TgTypes.SendMessageQuery)
 	sendQuery.ChatId, sendQuery.Text, sendQuery.ReplyToMessageId, sendQuery.ParseMode = chatId, text, replyId, "HTML"
 
@@ -37,5 +37,5 @@ func SendTextMessage(baseUrl, text string, chatId int64, replyId int64) TgTypes.
 	if err != nil {
 		log.Fatalln(err)
 	}
-	return data.Result
+	return &data.Result
 }

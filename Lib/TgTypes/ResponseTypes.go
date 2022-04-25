@@ -167,3 +167,18 @@ type AnswerCallbackQuery struct {
 	ShowAlert       bool   `json:"show_alert,omitempty"`
 	Url             string `json:"url,omitempty"`
 }
+
+type AddStickerQuery struct {
+	UserId     int64  `json:"user_id"`
+	Name       string `json:"name"`
+	PngSticker string `json:"png_sticker,omitempty"`
+	Emojis     string `json:"emojis"`
+}
+
+type CreateStickerSetQuery struct {
+	UserId     int64  `json:"user_id"`
+	Name       string `json:"name"`
+	Title      string `json:"title"`
+	PngSticker string `json:"png_sticker"`
+	Emojis     string `json:"emojis"`
+}

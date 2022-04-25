@@ -38,6 +38,16 @@ type StickerType struct {
 	FileSize     int              `json:"file_size,omitempty"`
 }
 
+type StickerSetType struct {
+	Name          string        `json:"name"`
+	Title         string        `json:"title"`
+	IsAnimated    bool          `json:"is_animated"`
+	IsVideo       bool          `json:"is_video"`
+	ContainsMasks bool          `json:"contains_masks"`
+	Stickers      []StickerType `json:"stickers"`
+	Thumb         PhotoSizeType `json:"thumb,omitempty"`
+}
+
 type MaskPositionType struct {
 	Point  string  `json:"point"`
 	XShift float64 `json:"x_shift"`

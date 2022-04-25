@@ -2,7 +2,6 @@ package main
 
 import (
 	"Telegram-Bot/Commands"
-	features "Telegram-Bot/Features"
 	"Telegram-Bot/Lib/TgFunctions"
 	"Telegram-Bot/Lib/TgTypes"
 	"fmt"
@@ -25,40 +24,62 @@ func main() {
 			go func(messages TgTypes.UpdateType) {
 				thisChatId, thisMessageId, textBody, command, joinedArgument := Functions.ParseMessage(&messages.Message)
 				fmt.Println(messages)
-
 				if strings.ToLower(messages.Message.Text) == "hi bot" {
 					Functions.SendTextMessage(baseUrl, "I made this bot from scratch", thisChatId, thisMessageId)
 				}
 
 				switch command {
-				case "menu" + botName:
+				case "":
+					Commands.FilterMessage(baseUrl, textBody, thisChatId, thisMessageId, delay)
+				case "menu" + botName, "menu":
 					Commands.MenuCommand(baseUrl, &messages.Message)
 				case "add", "addfilter", "addsticker":
 					if messages.Message.ReplyToMessage == nil {
 						Functions.SendTextMessage(baseUrl, "Please reply to a message", thisChatId, thisMessageId)
 					} else {
-						features.AddResponse(baseUrl, joinedArgument, thisChatId, thisMessageId, messages.Message.ReplyToMessage)
+						Commands.AddResponse(baseUrl, joinedArgument, thisChatId, thisMessageId, messages.Message.ReplyToMessage)
 					}
 				case "revoke":
-					features.StopResponse(baseUrl, joinedArgument, thisChatId, thisMessageId)
+					Commands.StopResponse(baseUrl, joinedArgument, thisChatId, thisMessageId)
 				case "filters":
 					Commands.ReactionList(baseUrl, &messages.Message)
-				case "resize", "sticker":
+				case "resize":
 					if messages.Message.Document.FileId == "" && (messages.Message.ReplyToMessage == nil || messages.Message.ReplyToMessage.Document.FileId == "") {
-						Functions.SendTextMessage(baseUrl, "Where is the image?", thisChatId, thisMessageId)
+						Functions.SendTextMessage(baseUrl, "Where is the image? reply to an image document (uncompressed).", thisChatId, thisMessageId)
 					} else {
 						if messages.Message.Document.FileId != "" {
-							go features.SendResizeImage(baseUrl, apiToken, &messages.Message)
+							go Commands.SendResizeImage(baseUrl, apiToken, &messages.Message)
 						} else {
-							go features.SendResizeImage(baseUrl, apiToken, messages.Message.ReplyToMessage)
+							go Commands.SendResizeImage(baseUrl, apiToken, messages.Message.ReplyToMessage)
 						}
 					}
-				default:
-					features.FilterMessage(baseUrl, textBody, thisChatId, thisMessageId, delay)
+				case "sticker":
+					if messages.Message.Document.FileId == "" && (messages.Message.ReplyToMessage == nil || messages.Message.ReplyToMessage.Document.FileId == "") {
+						Functions.SendTextMessage(baseUrl, "Where is the image? reply to an image document (uncompressed).", thisChatId, thisMessageId)
+					} else {
+						if messages.Message.Document.FileId != "" {
+							go Commands.MakeSticker(baseUrl, apiToken, &messages.Message)
+						} else {
+							go Commands.MakeSticker(baseUrl, apiToken, messages.Message.ReplyToMessage)
+						}
+					}
+				case "remove":
+					USER := Functions.GetChatMember(baseUrl, thisChatId, messages.Message.From.Id)
+					if USER.CanDeleteMessages == true || USER.Status == "creator" {
+						Functions.RemoveSticker(baseUrl, thisChatId, thisMessageId, messages.Message.ReplyToMessage)
+					} else {
+						Functions.SendTextMessage(baseUrl, "You can't remove the sticker.", thisChatId, thisMessageId)
+					}
 				}
 
 				if messages.CallbackQuery.Id != "" {
-					Functions.AnswerCallbackQuery(baseUrl, messages.CallbackQuery.Id, "Answering Query", true)
+					if messages.CallbackQuery.Data == "stickerMenu" {
+						Commands.StickerMenu(baseUrl, messages.CallbackQuery.Id)
+					} else if messages.CallbackQuery.Data == "filterMenu" {
+						Commands.FilterMenu(baseUrl, messages.CallbackQuery.Id)
+					} else {
+						Functions.AnswerCallbackQuery(baseUrl, messages.CallbackQuery.Id, "Answering Query", true)
+					}
 				}
 			}(messages)
 			offset = messages.UpdateId + 1
