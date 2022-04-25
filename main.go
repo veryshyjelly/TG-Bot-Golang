@@ -54,14 +54,12 @@ func main() {
 						}
 					}
 				case "sticker":
-					if messages.Message.Document.FileId == "" && (messages.Message.ReplyToMessage == nil || messages.Message.ReplyToMessage.Document.FileId == "") {
-						Functions.SendTextMessage(baseUrl, "Where is the image? reply to an image document (uncompressed).", thisChatId, thisMessageId)
+					if messages.Message.Document.FileId != "" {
+						go Commands.MakeSticker(baseUrl, apiToken, &messages.Message)
+					} else if messages.Message.ReplyToMessage == nil {
+						Functions.SendTextMessage(baseUrl, "Where is the image? reply to an image document (uncompressed) or a sticker (static).", thisChatId, thisMessageId)
 					} else {
-						if messages.Message.Document.FileId != "" {
-							go Commands.MakeSticker(baseUrl, apiToken, &messages.Message)
-						} else {
-							go Commands.MakeSticker(baseUrl, apiToken, messages.Message.ReplyToMessage)
-						}
+						go Commands.MakeSticker(baseUrl, apiToken, messages.Message.ReplyToMessage)
 					}
 				case "remove":
 					USER := Functions.GetChatMember(baseUrl, thisChatId, messages.Message.From.Id)
