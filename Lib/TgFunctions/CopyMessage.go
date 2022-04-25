@@ -4,37 +4,65 @@ import (
 	"Telegram-Bot/Lib/TgTypes"
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
 type CopyResult struct {
-	Ok        bool  `json:"ok"`
-	MessageId int64 `json:"message_id"`
+	Ok          bool   `json:"ok"`
+	MessageId   int64  `json:"message_id"`
+	ErrorCode   int    `json:"error_code"`
+	Description string `json:"description"`
 }
 
-func CopyMessage(baseUrl string, chatId, fromChatId, messageId, replyId int64, caption string) int64 {
-	sendQuery := new(TgTypes.CopyQuery)
-	sendQuery.ChatId, sendQuery.FromChatId, sendQuery.MessageId = chatId, fromChatId, messageId
-	sendQuery.ReplyToMessageId, sendQuery.Caption = replyId, caption
-	query, err := json.Marshal(sendQuery)
+type CopyQuery struct {
+	ChatId                   int64                       `json:"chat_id"`
+	FromChatId               int64                       `json:"from_chat_id"`
+	MessageId                int64                       `json:"message_id"`
+	Caption                  string                      `json:"caption,omitempty"`
+	ParseMode                string                      `json:"parse_mode,omitempty"`
+	CaptionEntities          []TgTypes.MessageEntityType `json:"caption_entities,omitempty"`
+	DisableNotification      bool                        `json:"disable_notification,omitempty"`
+	ProtectContent           bool                        `json:"protect_content,omitempty"`
+	ReplyToMessageId         int64                       `json:"reply_to_message_id,omitempty"`
+	AllowSendingWithoutReply bool                        `json:"allow_sending_without_reply,omitempty"`
+	//ReplyMarkup              InlineKeyboardMarkupType `json:"reply_markup,omitempty"`
+}
+
+func CopyMessage(baseUrl string, chatId, fromChatId, messageId, replyId int64, caption string, isProtected bool) (int64, error) {
+	query, err := json.Marshal(CopyQuery{
+		ChatId:           chatId,
+		FromChatId:       fromChatId,
+		MessageId:        messageId,
+		Caption:          caption,
+		ParseMode:        "HTML",
+		ProtectContent:   isProtected,
+		ReplyToMessageId: replyId,
+	})
 	if err != nil {
-		log.Fatalln(err)
+		return 0, err
 	}
+
 	resp, err := http.Post(baseUrl+"/copyMessage", "application/json", bytes.NewBuffer(query))
 	if err != nil {
-		log.Fatalln(err)
+		return 0, err
 	}
-	defer resp.Body.Close()
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalln(err)
+		return 0, err
 	}
+
 	data := CopyResult{}
 	err = json.Unmarshal(body, &data)
 	if err != nil {
-		log.Fatalln(err)
+		return 0, err
 	}
-	return data.MessageId
+
+	if !data.Ok {
+		return 0, errors.New(data.Description)
+	}
+
+	return data.MessageId, nil
 }

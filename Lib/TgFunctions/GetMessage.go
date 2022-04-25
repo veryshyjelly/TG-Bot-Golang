@@ -3,36 +3,39 @@ package Functions
 import (
 	"Telegram-Bot/Lib/TgTypes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
 type UpdateResult struct {
-	Ok     bool                 `json:"ok"`
-	Result []TgTypes.UpdateType `json:"result"`
+	Ok          bool                 `json:"ok"`
+	Result      []TgTypes.UpdateType `json:"result"`
+	ErrorCode   int                  `json:"error_code"`
+	Description string               `json:"description"`
 }
 
-func GetMessage(baseUrl string, offset, limit int64) []TgTypes.UpdateType {
+func GetMessage(baseUrl string, offset, limit int64) ([]TgTypes.UpdateType, error) {
 	resp, err := http.Get(baseUrl + "/getUpdates" + "?offset=" + fmt.Sprint(offset) + "&limit=" + fmt.Sprint(limit))
 	if err != nil {
-		log.Fatalln(err)
+		return nil, err
 	}
-	defer resp.Body.Close()
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalln(err)
+		return nil, err
 	}
+
 	data := UpdateResult{}
 	err = json.Unmarshal(body, &data)
 	if err != nil {
-		log.Fatalln(err)
+		return nil, err
 	}
 
 	if !data.Ok {
-		return nil
+		return nil, errors.New(data.Description)
 	}
 
-	return data.Result
+	return data.Result, nil
 }

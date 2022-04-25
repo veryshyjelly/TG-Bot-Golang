@@ -1,46 +1,56 @@
 package Functions
 
 import (
-	"Telegram-Bot/Lib/TgTypes"
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
-type AnswerCallbackResult struct {
-	Ok     bool `json:"ok"`
-	Result bool `json:"result"`
+type AnswerCallbackQueryType struct {
+	CallbackQueryId string `json:"callback_query_id"`
+	Text            string `json:"text,omitempty"`
+	ShowAlert       bool   `json:"show_alert,omitempty"`
+	Url             string `json:"url,omitempty"`
 }
 
-func AnswerCallbackQuery(baseUrl, queryId, text string, showAlert bool) bool {
-	query, err := json.Marshal(TgTypes.AnswerCallbackQuery{
+type AnswerCallbackResult struct {
+	Ok          bool   `json:"ok"`
+	Result      bool   `json:"result"`
+	ErrorCode   int    `json:"error_code"`
+	Description string `json:"description"`
+}
+
+func AnswerCallbackQuery(baseUrl, queryId, text string, showAlert bool) (bool, error) {
+	query, err := json.Marshal(AnswerCallbackQueryType{
 		CallbackQueryId: queryId,
 		Text:            text,
 		ShowAlert:       showAlert,
 	})
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
+
 	resp, err := http.Post(baseUrl+"/answerCallbackQuery", "application/json", bytes.NewBuffer(query))
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
-	defer resp.Body.Close()
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
+
 	data := AnswerCallbackResult{}
 	err = json.Unmarshal(body, &data)
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
 
 	if !data.Ok {
-		return false
+		return false, errors.New(data.Description)
 	}
 
-	return data.Result
+	return data.Result, err
 }

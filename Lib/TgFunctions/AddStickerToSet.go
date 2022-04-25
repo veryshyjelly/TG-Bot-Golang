@@ -4,40 +4,50 @@ import (
 	"Telegram-Bot/Lib/TgTypes"
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
 type AddStickerResult struct {
-	Ok     bool `json:"ok"`
-	Result bool `json:"result"`
+	Ok          bool   `json:"ok"`
+	Result      bool   `json:"result"`
+	ErrorCode   int    `json:"error_code"`
+	Description string `json:"description"`
 }
 
-func AddStickerToSet(baseUrl, name, pngSticker, emoji string, userId int64) bool {
-	query, err := json.Marshal(TgTypes.AddStickerQuery{UserId: userId, Name: name, PngSticker: pngSticker, Emojis: emoji})
+func AddStickerToSet(baseUrl, name, pngSticker, emoji string, userId int64) (bool, error) {
+	query, err := json.Marshal(TgTypes.AddStickerQuery{
+		UserId:     userId,
+		Name:       name,
+		PngSticker: pngSticker,
+		Emojis:     emoji,
+	})
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
+
 	resp, err := http.Post(baseUrl+"/addStickerToSet", "application/json", bytes.NewBuffer(query))
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
-	defer resp.Body.Close()
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
+
 	data := AddStickerResult{}
 	err = json.Unmarshal(body, &data)
 	if err != nil {
-		log.Fatalln(err)
-	}
-	fmt.Println(string(body))
-	if !data.Ok {
-		return false
+		return false, err
 	}
 
-	return data.Result
+	fmt.Println(string(body))
+	if !data.Ok {
+		return false, errors.New(data.Description)
+	}
+
+	return data.Result, nil
 }

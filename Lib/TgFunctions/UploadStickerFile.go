@@ -4,10 +4,10 @@ import (
 	"Telegram-Bot/Lib/TgTypes"
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"mime/multipart"
 	"net/http"
 	"strings"
@@ -15,12 +15,13 @@ import (
 )
 
 type UploadStickerResult struct {
-	Ok     bool             `json:"ok"`
-	Result TgTypes.FileType `json:"result"`
+	Ok          bool             `json:"ok"`
+	Result      TgTypes.FileType `json:"result"`
+	ErrorCode   int              `json:"error_code"`
+	Description string           `json:"description"`
 }
 
-func UploadStickerFile(baseUrl string, userId int64, file *bytes.Buffer) *TgTypes.FileType {
-
+func UploadStickerFile(baseUrl string, userId int64, file *bytes.Buffer) (*TgTypes.FileType, error) {
 	client := &http.Client{Timeout: time.Minute * 10}
 
 	body := &bytes.Buffer{}
@@ -33,33 +34,39 @@ func UploadStickerFile(baseUrl string, userId int64, file *bytes.Buffer) *TgType
 		fw, err := writer.CreateFormField(k)
 		_, err = io.Copy(fw, strings.NewReader(fmt.Sprint(v)))
 		if err != nil {
-			log.Fatalln(err)
+			return nil, err
 		}
 	}
 
 	fw, err := writer.CreateFormFile("png_sticker", "upsticker.png")
 	_, err = io.Copy(fw, file)
 	if err != nil {
-		log.Fatalln(err)
+		return nil, err
 	}
-	writer.Close()
-	req, err := http.NewRequest("POST", baseUrl+"/uploadStickerFile", bytes.NewReader(body.Bytes()))
 
+	err = writer.Close()
 	if err != nil {
-		log.Fatalln(err)
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", baseUrl+"/uploadStickerFile", bytes.NewReader(body.Bytes()))
+	if err != nil {
+		return nil, err
 	}
 
 	req.Header.Set("Content-Type", writer.FormDataContentType()) // Very very important step
 	rsp, _ := client.Do(req)
 	sendResult, err := ioutil.ReadAll(rsp.Body)
-	//fmt.Println(string(sendResult))
 
 	returnData := UploadStickerResult{}
 	err = json.Unmarshal(sendResult, &returnData)
 	if err != nil {
-		log.Fatalln(err)
-		return nil
+		return nil, err
 	}
 
-	return &returnData.Result
+	if !returnData.Ok {
+		return nil, errors.New(returnData.Description)
+	}
+
+	return &returnData.Result, err
 }

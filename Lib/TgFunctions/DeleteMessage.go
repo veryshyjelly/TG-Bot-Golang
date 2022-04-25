@@ -1,48 +1,59 @@
 package Functions
 
 import (
-	"Telegram-Bot/Lib/TgTypes"
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"time"
 )
 
-type DeleteResult struct {
-	Ok     bool `json:"ok"`
-	Result bool `json:"result"`
+type DeleteMessageQuery struct {
+	ChatId    int64 `json:"chat_id"`
+	MessageId int64 `json:"message_id"`
 }
 
-func DeleteMessage(baseUrl string, ChatId int64, messageId int64) bool {
-	query, err := json.Marshal(TgTypes.DeleteMessageQuery{ChatId: ChatId, MessageId: messageId})
+type DeleteResult struct {
+	Ok          bool   `json:"ok"`
+	Result      bool   `json:"result"`
+	ErrorCode   int    `json:"error_code"`
+	Description string `json:"description"`
+}
+
+func DeleteMessage(baseUrl string, ChatId int64, messageId int64) (bool, error) {
+	query, err := json.Marshal(DeleteMessageQuery{
+		ChatId:    ChatId,
+		MessageId: messageId,
+	})
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
+
 	resp, err := http.Post(baseUrl+"/deleteMessage", "application/json", bytes.NewBuffer(query))
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
-	defer resp.Body.Close()
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
+
 	data := DeleteResult{}
 	err = json.Unmarshal(body, &data)
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
 
 	if !data.Ok {
-		return false
+		return false, errors.New(data.Description)
 	}
 
-	return data.Result
+	return data.Result, nil
 }
 
-func DelayDelete(baseUrl string, delay int, messageId, chatId int64) bool {
+func DelayDelete(baseUrl string, delay int, messageId, chatId int64) (bool, error) {
 	time.Sleep(time.Second * time.Duration(delay))
 	//fmt.Println("Deleted")
 	return DeleteMessage(baseUrl, chatId, messageId)

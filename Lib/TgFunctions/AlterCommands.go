@@ -4,8 +4,8 @@ import (
 	"Telegram-Bot/Lib/TgTypes"
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -22,36 +22,73 @@ type CommandQuery struct {
 	LanguageCode string                   `json:"language_code,omitempty"`
 }
 
-func SetMyCommands(baseUrl string, commands []TgTypes.BotCommandType, scope string) bool {
-	sendQuery := new(CommandQuery)
-	sendQuery.Commands, sendQuery.scope = commands, scope
-	query, err := json.Marshal(sendQuery)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	resp, err := http.Post(baseUrl+"/setMyCommands", "application/json", bytes.NewBuffer(query))
-	if err != nil {
-		log.Fatalln(err)
-	}
-	body, err := ioutil.ReadAll(resp.Body)
-	var result bool
-	err = json.Unmarshal(body, &result)
-	return result
+type SetCommandsResult struct {
+	Ok          bool   `json:"ok"`
+	Result      bool   `json:"result"`
+	ErrorCode   int    `json:"error_code"`
+	Description string `json:"description"`
 }
 
-func DeleteMyCommands(baseUrl, scope string) bool {
-	sendQuery := new(CommandQuery)
-	sendQuery.scope = scope
-	query, err := json.Marshal(sendQuery)
+func SetMyCommands(baseUrl string, commands []TgTypes.BotCommandType, scope string) (bool, error) {
+	query, err := json.Marshal(CommandQuery{
+		Commands: commands,
+		scope:    scope,
+	})
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
+
+	resp, err := http.Post(baseUrl+"/setMyCommands", "application/json", bytes.NewBuffer(query))
+	if err != nil {
+		return false, err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return false, err
+	}
+
+	data := SetCommandsResult{}
+	err = json.Unmarshal(body, &data)
+	if err != nil {
+		return false, err
+	}
+
+	if !data.Ok {
+		return false, errors.New(data.Description)
+	}
+
+	return data.Result, nil
+}
+
+func DeleteMyCommands(baseUrl, scope string) (bool, error) {
+	query, err := json.Marshal(CommandQuery{
+		scope: scope,
+	})
+	if err != nil {
+		return false, err
+	}
+
 	resp, err := http.Post(baseUrl+"/deleteMyCommands", "application/json", bytes.NewBuffer(query))
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
+
 	body, err := ioutil.ReadAll(resp.Body)
-	var result bool
-	err = json.Unmarshal(body, &result)
-	return result
+	if err != nil {
+		return false, err
+	}
+
+	data := SetCommandsResult{}
+	err = json.Unmarshal(body, &data)
+	if err != nil {
+		return false, err
+	}
+
+	if !data.Ok {
+		return false, errors.New(data.Description)
+	}
+
+	return data.Result, nil
+
 }

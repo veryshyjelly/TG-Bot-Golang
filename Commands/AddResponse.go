@@ -5,7 +5,6 @@ import (
 	"Telegram-Bot/Lib/TgTypes"
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"strings"
 )
 
@@ -24,11 +23,10 @@ type FilterDataArray struct {
 	Data []ChatFileFilter `json:"data"`
 }
 
-func AddResponse(baseUrl, trigger string, chatId, messageId int64, repliedMessage *TgTypes.MessageType) {
-
+func AddResponse(baseUrl, trigger string, chatId, messageId int64, repliedMessage *TgTypes.MessageType) error {
 	if trigger == "" {
-		Functions.SendTextMessage(baseUrl, "Add some text", chatId, messageId)
-		return
+		_, err := Functions.SendTextMessage(baseUrl, "Add some text", chatId, messageId)
+		return err
 	}
 
 	trigger, fileId, fileType := strings.ToLower(trigger), "", ""
@@ -48,13 +46,16 @@ func AddResponse(baseUrl, trigger string, chatId, messageId int64, repliedMessag
 	} else if repliedMessage.Document.FileId != "" {
 		fileType = "document"
 	} else {
-		go Functions.SendTextMessage(baseUrl, "Please reply to a photo or sticker or audio or gif or document.", chatId, messageId)
-		return
+		_, err := Functions.SendTextMessage(baseUrl, "Please reply to a photo or sticker or audio or gif or document.", chatId, messageId)
+		return err
 	}
 
 	storage, _ := ioutil.ReadFile("Data/reactions.json")
 	data := FilterDataArray{}
 	err := json.Unmarshal(storage, &data)
+	if err != nil {
+		return err
+	}
 
 	var done bool
 
@@ -88,11 +89,13 @@ func AddResponse(baseUrl, trigger string, chatId, messageId int64, repliedMessag
 
 	byteData, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
 
 	err = ioutil.WriteFile("Data/reactions.json", byteData, 0)
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
+
+	return nil
 }

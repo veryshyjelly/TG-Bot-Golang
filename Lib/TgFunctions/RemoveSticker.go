@@ -4,15 +4,17 @@ import (
 	"Telegram-Bot/Lib/TgTypes"
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
 type RemoveStickerResult struct {
-	Ok     bool `json:"ok"`
-	Result bool `json:"result"`
+	Ok          bool   `json:"ok"`
+	Result      bool   `json:"result"`
+	ErrorCode   int    `json:"error_code"`
+	Description string `json:"description"`
 }
 
 type RemoveStickerQuery struct {
@@ -29,38 +31,41 @@ type CreatedSticker struct {
 	Data []ChatStickerSet `json:"data"`
 }
 
-func RemoveSticker(baseUrl string, chatId int64, messageId int64, repliedMessage *TgTypes.MessageType) bool {
+func RemoveSticker(baseUrl string, chatId int64, messageId int64, repliedMessage *TgTypes.MessageType) (bool, error) {
 	if repliedMessage == nil || repliedMessage.Sticker.FileId == "" {
-		SendTextMessage(baseUrl, "Reply to the sticker.", chatId, messageId)
-		return false
+		_, err := SendTextMessage(baseUrl, "Reply to the sticker.", chatId, messageId)
+		return false, err
 	}
 
 	//fmt.Println(repliedMessage.Sticker.SetName)
 	if repliedMessage.Sticker.SetName != "x"+fmt.Sprint(uint64(repliedMessage.Chat.Id))+"_by_AB22TGBot" {
-		SendTextMessage(baseUrl, "The pack is not of this group.", chatId, messageId)
-		return false
+		_, err := SendTextMessage(baseUrl, "The pack is not of this group.", chatId, messageId)
+		return false, err
 	}
+
 	query, err := json.Marshal(RemoveStickerQuery{Sticker: repliedMessage.Sticker.FileId})
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
+
 	resp, err := http.Post(baseUrl+"/deleteStickerFromSet", "application/json", bytes.NewBuffer(query))
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
-	defer resp.Body.Close()
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
-	data := DeleteResult{}
+
+	data := RemoveStickerResult{}
 	err = json.Unmarshal(body, &data)
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
 
 	if !data.Ok {
-		return false
+		return false, errors.New(data.Description)
 	}
 
 	storage, _ := ioutil.ReadFile("Data/createdStickers.json")
@@ -74,17 +79,17 @@ func RemoveSticker(baseUrl string, chatId int64, messageId int64, repliedMessage
 		}
 	}
 
-	//fmt.Println(stickerData)
 	byteData, err := json.MarshalIndent(stickerData, "", "\t")
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
 
 	err = ioutil.WriteFile("Data/createdStickers.json", byteData, 0)
 	if err != nil {
-		log.Fatalln(err)
+		return false, err
 	}
 
-	SendTextMessage(baseUrl, "The sticker was successfully removed.", chatId, messageId)
-	return data.Result
+	_, err = SendTextMessage(baseUrl, "The sticker was successfully removed.", chatId, messageId)
+
+	return data.Result, err
 }

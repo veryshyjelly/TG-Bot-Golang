@@ -4,41 +4,49 @@ import (
 	"Telegram-Bot/Lib/TgTypes"
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
-type GetFileResult struct {
-	Ok     bool             `json:"ok"`
-	Result TgTypes.FileType `json:"result"`
+type GetFileQuery struct {
+	FileId string `json:"file_id"`
 }
 
-func GetFile(baseUrl, fileId string) TgTypes.FileType {
-	query, err := json.Marshal(TgTypes.GetFileQuery{FileId: fileId})
+type GetFileResult struct {
+	Ok          bool             `json:"ok"`
+	Result      TgTypes.FileType `json:"result"`
+	ErrorCode   int              `json:"error_code"`
+	Description string           `json:"description"`
+}
+
+func GetFile(baseUrl, fileId string) (*TgTypes.FileType, error) {
+	query, err := json.Marshal(GetFileQuery{
+		FileId: fileId,
+	})
 	if err != nil {
-		log.Fatalln(err)
+		return nil, err
 	}
 
 	resp, err := http.Post(baseUrl+"/getFile", "application/json", bytes.NewBuffer(query))
 	if err != nil {
-		log.Fatalln(err)
+		return nil, err
 	}
-	defer resp.Body.Close()
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalln(err)
+		return nil, err
 	}
 
 	data := GetFileResult{}
 	err = json.Unmarshal(body, &data)
 	if err != nil {
-		log.Fatalln(err)
+		return nil, err
 	}
 
 	if !data.Ok {
-		return TgTypes.FileType{}
+		return nil, errors.New(data.Description)
 	}
 
-	return data.Result
+	return &data.Result, nil
 }

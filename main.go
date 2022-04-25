@@ -5,6 +5,7 @@ import (
 	"Telegram-Bot/Lib/TgFunctions"
 	"Telegram-Bot/Lib/TgTypes"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 )
@@ -18,68 +19,81 @@ func main() {
 	var offset, limit int64 = 0, 100
 	delay := 10
 	for {
-		response := Functions.GetMessage(baseUrl, offset, limit)
+		response, err := Functions.GetMessage(baseUrl, offset, limit)
+		if err != nil {
+			log.Fatalln(err)
+		}
 
 		for _, messages := range response {
 			go func(messages TgTypes.UpdateType) {
 				thisChatId, thisMessageId, textBody, command, joinedArgument := Functions.ParseMessage(&messages.Message)
 				fmt.Println(messages)
 				if strings.ToLower(messages.Message.Text) == "hi bot" {
-					Functions.SendTextMessage(baseUrl, "I made this bot from scratch", thisChatId, thisMessageId)
+					_, err = Functions.SendTextMessage(baseUrl, "I made this bot from scratch", thisChatId, thisMessageId)
 				}
 
 				switch command {
 				case "":
-					Commands.FilterMessage(baseUrl, textBody, thisChatId, thisMessageId, delay)
+					err = Commands.FilterMessage(baseUrl, textBody, thisChatId, thisMessageId, delay)
 				case "menu" + botName, "menu":
-					Commands.MenuCommand(baseUrl, &messages.Message)
-				case "add", "addfilter", "addsticker":
+					_, err = Commands.MenuCommand(baseUrl, &messages.Message)
+				case "add", "addfilter", "addsticker", "add" + botName:
 					if messages.Message.ReplyToMessage == nil {
-						Functions.SendTextMessage(baseUrl, "Please reply to a message", thisChatId, thisMessageId)
+						_, err = Functions.SendTextMessage(baseUrl, "Please reply to a message", thisChatId, thisMessageId)
 					} else {
-						Commands.AddResponse(baseUrl, joinedArgument, thisChatId, thisMessageId, messages.Message.ReplyToMessage)
+						err = Commands.AddResponse(baseUrl, joinedArgument, thisChatId, thisMessageId, messages.Message.ReplyToMessage)
 					}
-				case "revoke":
-					Commands.StopResponse(baseUrl, joinedArgument, thisChatId, thisMessageId)
-				case "filters":
-					Commands.ReactionList(baseUrl, &messages.Message)
-				case "resize":
+				case "revoke", "revoke" + botName:
+					_, err = Commands.StopResponse(baseUrl, joinedArgument, thisChatId, thisMessageId)
+				case "filters", "filters" + botName:
+					_, err = Commands.ReactionList(baseUrl, &messages.Message)
+				case "resize", "resize" + botName:
 					if messages.Message.Document.FileId == "" && (messages.Message.ReplyToMessage == nil || messages.Message.ReplyToMessage.Document.FileId == "") {
-						Functions.SendTextMessage(baseUrl, "Where is the image? reply to an image document (uncompressed).", thisChatId, thisMessageId)
+						_, err = Functions.SendTextMessage(baseUrl, "Where is the image? reply to an image document (uncompressed).", thisChatId, thisMessageId)
 					} else {
 						if messages.Message.Document.FileId != "" {
-							go Commands.SendResizeImage(baseUrl, apiToken, &messages.Message)
+							_, err = Commands.SendResizeImage(baseUrl, apiToken, &messages.Message)
 						} else {
-							go Commands.SendResizeImage(baseUrl, apiToken, messages.Message.ReplyToMessage)
+							_, err = Commands.SendResizeImage(baseUrl, apiToken, messages.Message.ReplyToMessage)
 						}
 					}
-				case "sticker":
+				case "sticker", "sticker" + botName:
 					if messages.Message.Document.FileId != "" {
-						go Commands.MakeSticker(baseUrl, apiToken, &messages.Message)
+						_, err = Commands.MakeSticker(baseUrl, apiToken, &messages.Message)
 					} else if messages.Message.ReplyToMessage == nil {
-						Functions.SendTextMessage(baseUrl, "Where is the image? reply to an image document (uncompressed) or a sticker (static).", thisChatId, thisMessageId)
+						_, err = Functions.SendTextMessage(baseUrl, "Where is the image? reply to an image document (uncompressed) or a sticker (static).", thisChatId, thisMessageId)
 					} else {
-						go Commands.MakeSticker(baseUrl, apiToken, messages.Message.ReplyToMessage)
+						_, err = Commands.MakeSticker(baseUrl, apiToken, messages.Message.ReplyToMessage)
 					}
-				case "remove":
-					USER := Functions.GetChatMember(baseUrl, thisChatId, messages.Message.From.Id)
+				case "remove", "remove" + botName:
+					USER, err := Functions.GetChatMember(baseUrl, thisChatId, messages.Message.From.Id)
+					if err != nil {
+						log.Println(err)
+					}
 					if USER.CanDeleteMessages == true || USER.Status == "creator" {
-						Functions.RemoveSticker(baseUrl, thisChatId, thisMessageId, messages.Message.ReplyToMessage)
+						_, err = Functions.RemoveSticker(baseUrl, thisChatId, thisMessageId, messages.Message.ReplyToMessage)
 					} else {
-						Functions.SendTextMessage(baseUrl, "You can't remove the sticker.", thisChatId, thisMessageId)
+						_, err = Functions.SendTextMessage(baseUrl, "You can't remove the sticker.", thisChatId, thisMessageId)
+					}
+					if err != nil {
+						log.Println(err)
 					}
 				}
 
 				if messages.CallbackQuery.Id != "" {
 					if messages.CallbackQuery.Data == "stickerMenu" {
-						Commands.StickerMenu(baseUrl, messages.CallbackQuery.Id)
+						err = Commands.StickerMenu(baseUrl, messages.CallbackQuery.Id)
 					} else if messages.CallbackQuery.Data == "filterMenu" {
-						Commands.FilterMenu(baseUrl, messages.CallbackQuery.Id)
+						err = Commands.FilterMenu(baseUrl, messages.CallbackQuery.Id)
 					} else {
-						Functions.AnswerCallbackQuery(baseUrl, messages.CallbackQuery.Id, "Answering Query", true)
+						_, err = Functions.AnswerCallbackQuery(baseUrl, messages.CallbackQuery.Id, "Answering Query", true)
 					}
 				}
+				if err != nil {
+					log.Println(err)
+				}
 			}(messages)
+
 			offset = messages.UpdateId + 1
 		}
 		time.Sleep(80 * time.Millisecond)
