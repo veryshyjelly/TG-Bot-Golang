@@ -34,7 +34,8 @@ func RemoveSticker(baseUrl string, chatId int64, messageId int64, repliedMessage
 		SendTextMessage(baseUrl, "Reply to the sticker.", chatId, messageId)
 		return false
 	}
-	fmt.Println(repliedMessage.Sticker.SetName)
+
+	//fmt.Println(repliedMessage.Sticker.SetName)
 	if repliedMessage.Sticker.SetName != "x"+fmt.Sprint(uint64(repliedMessage.Chat.Id))+"_by_AB22TGBot" {
 		SendTextMessage(baseUrl, "The pack is not of this group.", chatId, messageId)
 		return false
@@ -73,6 +74,7 @@ func RemoveSticker(baseUrl string, chatId int64, messageId int64, repliedMessage
 		}
 	}
 
+	//fmt.Println(stickerData)
 	byteData, err := json.MarshalIndent(stickerData, "", "\t")
 	if err != nil {
 		log.Fatalln(err)
