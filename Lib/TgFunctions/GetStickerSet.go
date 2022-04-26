@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -36,7 +35,7 @@ func GetStickerSet(baseUrl, Name string) (*TgTypes.StickerSetType, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(string(body))
+
 	data := StickerSetResult{}
 	err = json.Unmarshal(body, &data)
 	if err != nil {
