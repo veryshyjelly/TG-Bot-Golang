@@ -76,7 +76,12 @@ func MakeSticker(baseUrl, apiToken string, message *TgTypes.MessageType) (*TgTyp
 
 	packName := "x" + fmt.Sprint(uint64(message.Chat.Id)) + "_by_AB22TGBot"
 	fmt.Println("Packname", packName)
-	title := message.Chat.Title + " Daemon-Bot"
+	var title string
+	if message.Chat.Id < 0 {
+		title = message.Chat.Title + " Daemon-Bot"
+	} else {
+		title = message.From.FirstName + " Daemon-Bot Pack"
+	}
 
 	if set, _ := Functions.GetStickerSet(baseUrl, packName); set != nil {
 		if ok, _ := Functions.AddStickerToSet(baseUrl, packName, upStickerFile.FileId, "😂", 1653921867); ok {
