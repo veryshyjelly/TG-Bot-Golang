@@ -76,15 +76,18 @@ func MakeSticker(baseUrl, apiToken string, message *TgTypes.MessageType) (*TgTyp
 
 	packName := "x" + fmt.Sprint(uint64(message.Chat.Id)) + "_by_AB22TGBot"
 	fmt.Println("Packname", packName)
+	var stickUserId int64
 	var title string
 	if message.Chat.Id < 0 {
 		title = message.Chat.Title + " Daemon-Bot"
+		stickUserId = 1653921867
 	} else {
 		title = message.From.FirstName + " Daemon-Bot Pack"
+		stickUserId = message.From.Id
 	}
 
 	if set, _ := Functions.GetStickerSet(baseUrl, packName); set != nil {
-		if ok, _ := Functions.AddStickerToSet(baseUrl, packName, upStickerFile.FileId, "😂", 1653921867); ok {
+		if ok, _ := Functions.AddStickerToSet(baseUrl, packName, upStickerFile.FileId, "😂", stickUserId); ok {
 			return Functions.SendTextMessage(baseUrl, "Sticker added to <a href=\"https://t.me/addstickers/"+packName+"\">Pack</a>", message.Chat.Id, message.MessageId)
 
 		} else {
@@ -93,7 +96,7 @@ func MakeSticker(baseUrl, apiToken string, message *TgTypes.MessageType) (*TgTyp
 		}
 
 	} else {
-		if ok, err := Functions.CreateStickerSet(baseUrl, packName, title, "😂", upStickerFile.FileId, 1653921867); ok {
+		if ok, err := Functions.CreateStickerSet(baseUrl, packName, title, "😂", upStickerFile.FileId, stickUserId); ok {
 			return Functions.SendTextMessage(baseUrl, "Sticker added to <a href=\"https://t.me/addstickers/"+packName+"\">Pack</a>", message.Chat.Id, message.MessageId)
 
 		} else {
