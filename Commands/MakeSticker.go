@@ -4,10 +4,8 @@ import (
 	Functions "Telegram-Bot/Lib/TgFunctions"
 	"Telegram-Bot/Lib/TgTypes"
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 )
@@ -76,72 +74,27 @@ func MakeSticker(baseUrl, apiToken string, message *TgTypes.MessageType) (*TgTyp
 		return nil, err
 	}
 
-	storage, _ := ioutil.ReadFile("Data/createdStickers.json")
-	stickerData := CreatedSticker{}
-	err = json.Unmarshal(storage, &stickerData)
-	if err != nil {
-		return nil, err
-	}
+	packName := "x" + fmt.Sprint(uint64(message.Chat.Id)) + "_by_AB22TGBot"
+	fmt.Println("Packname", packName)
+	title := message.Chat.Title + " Daemon-Bot"
 
-	var sentMessage *TgTypes.MessageType
-	var done bool
+	if set, _ := Functions.GetStickerSet(baseUrl, packName); set != nil {
+		if ok, _ := Functions.AddStickerToSet(baseUrl, packName, upStickerFile.FileId, "😂", 1653921867); ok {
+			return Functions.SendTextMessage(baseUrl, "Sticker added to <a href=\"https://t.me/addstickers/"+packName+"\">Pack</a>", message.Chat.Id, message.MessageId)
 
-	for k, chats := range stickerData.Data {
-		if chats.ChatId == message.Chat.Id {
-			if ok, _ := Functions.AddStickerToSet(baseUrl, chats.Name, upStickerFile.FileId, "😂", 1653921867); ok {
-				chats.Count++
-				stickerData.Data[k] = chats
-				sentMessage, err = Functions.SendTextMessage(baseUrl, "Sticker added to <a href=\"https://t.me/addstickers/"+chats.Name+"\">Pack</a>", message.Chat.Id, message.MessageId)
-			} else {
-				sentMessage, err = Functions.SendTextMessage(baseUrl, "Adding of sticker failed.", message.Chat.Id, message.MessageId)
-			}
-			done = true
-			break
-		}
-	}
-
-	if err != nil {
-		return nil, err
-	}
-
-	if !done {
-		packName := "x" + fmt.Sprint(uint64(message.Chat.Id)) + "_by_AB22TGBot"
-		fmt.Println("Packname", packName)
-		title := message.Chat.Title + " Daemon-Bot"
-
-		if ok, _ := Functions.CreateStickerSet(baseUrl, packName, title, "🌝", upStickerFile.FileId, 1653921867); ok {
-			if stickerData.Data == nil {
-				stickerData.Data = []ChatStickerSet{{
-					ChatId: message.Chat.Id,
-					Name:   packName,
-					Count:  1,
-				}}
-			} else {
-				stickerData.Data = append(stickerData.Data, ChatStickerSet{
-					ChatId: message.Chat.Id,
-					Name:   packName,
-					Count:  1,
-				})
-			}
-
-			sentMessage, err = Functions.SendTextMessage(baseUrl, "Sticker added to <a href=\"https://t.me/addstickers/"+packName+"\">Pack</a>", message.Chat.Id, message.MessageId)
 		} else {
-			sentMessage, err = Functions.SendTextMessage(baseUrl, "Adding of sticker failed.", message.Chat.Id, message.MessageId)
+			return Functions.SendTextMessage(baseUrl, "Adding of sticker failed. \nERROR: "+err.Error(), message.Chat.Id, message.MessageId)
+
+		}
+
+	} else {
+		if ok, err := Functions.CreateStickerSet(baseUrl, packName, title, "😂", upStickerFile.FileId, 1653921867); ok {
+			return Functions.SendTextMessage(baseUrl, "Sticker added to <a href=\"https://t.me/addstickers/"+packName+"\">Pack</a>", message.Chat.Id, message.MessageId)
+
+		} else {
+			return Functions.SendTextMessage(baseUrl, "Adding of sticker failed. \nERROR: "+err.Error(), message.Chat.Id, message.MessageId)
+
 		}
 	}
-	if err != nil {
-		return nil, err
-	}
 
-	byteData, err := json.MarshalIndent(stickerData, "", "\t")
-	if err != nil {
-		return nil, err
-	}
-
-	err = ioutil.WriteFile("Data/createdStickers.json", byteData, 0)
-	if err != nil {
-		return nil, err
-	}
-
-	return sentMessage, err
 }

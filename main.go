@@ -69,7 +69,7 @@ func main() {
 					if err != nil {
 						log.Println(err)
 					}
-					if USER.CanDeleteMessages == true || USER.Status == "creator" {
+					if USER.CanDeleteMessages == true || USER.Status == "creator" || thisChatId > 0 {
 						_, err = Functions.RemoveSticker(baseUrl, thisChatId, thisMessageId, messages.Message.ReplyToMessage)
 					} else {
 						_, err = Functions.SendTextMessage(baseUrl, "You can't remove the sticker.", thisChatId, thisMessageId)
