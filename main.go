@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	apiToken := "5238894566:AAEvB2BgSISLA_tl_Cs6bpDU2lR66JbkMmI"
+	apiToken := ""
 	baseUrl := "https://api.telegram.org/bot" + apiToken
 	botName := "@AB22TGBot"
 
