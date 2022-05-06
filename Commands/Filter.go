@@ -31,36 +31,29 @@ LOOP:
 				if strings.Contains(" "+textBody+" ", " "+filters.Trigger+" ") {
 					var repliedMessage *TgTypes.MessageType
 					var respondId int64
-
+					var sendMode Functions.MediaType
 					switch filters.FileType {
 					case "sticker":
-						repliedMessage, err = Functions.SendStickerByUrl(baseUrl, filters.FileId, chatId, messageId, true)
-						respondId = repliedMessage.MessageId
-
+						sendMode = Functions.Sticker
 					case "animation":
-						repliedMessage, err = Functions.SendAnimationByUrl(baseUrl, filters.FileId, chatId, messageId, "", true)
-						respondId = repliedMessage.MessageId
-
+						sendMode = Functions.Animation
 					case "audio":
-						repliedMessage, err = Functions.SendAudioByUrl(baseUrl, filters.FileId, chatId, messageId, filters.Trigger, true)
-						respondId = repliedMessage.MessageId
-
+						sendMode = Functions.Audio
 					case "photo":
-						repliedMessage, err = Functions.SendPhotoByUrl(baseUrl, filters.FileId, chatId, messageId, "", true)
-						respondId = repliedMessage.MessageId
-
+						sendMode = Functions.Photo
 					case "video":
-						repliedMessage, err = Functions.SendVideoByUrl(baseUrl, filters.FileId, chatId, messageId, "", true)
-						respondId = repliedMessage.MessageId
-
+						sendMode = Functions.Video
 					case "document":
-						repliedMessage, err = Functions.SendDocumentByUrl(baseUrl, filters.FileId, chatId, messageId, filters.Trigger, true)
-						respondId = repliedMessage.MessageId
-
+						sendMode = Functions.Document
 					case "message":
 						copyID, _ := strconv.ParseInt(filters.FileId, 10, 64)
 						respondId, err = Functions.CopyMessage(baseUrl, chatId, chatId, copyID, messageId, "", true)
 
+					}
+
+					if filters.FileType != "message" {
+						repliedMessage, err = Functions.SendMediaByUrl(baseUrl, filters.FileId, sendMode, chatId, messageId, "", true)
+						respondId = repliedMessage.MessageId
 					}
 
 					if err != nil {

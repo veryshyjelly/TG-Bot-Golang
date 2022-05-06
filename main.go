@@ -82,7 +82,7 @@ func main() {
 					if messages.Message.From.Id != Settings.OwnerId {
 						_, err = Functions.SendTextMessage(baseUrl, "Sorry you can't access the data.", thisChatId, thisMessageId)
 					} else {
-						_, err = Functions.SendDocument(baseUrl, "Data/reactions.json", thisChatId, thisMessageId, "bot data here", false)
+						_, err = Functions.SendMedia(baseUrl, "Data/reactions.json", Functions.Document, thisChatId, thisMessageId, "bot data here", false)
 					}
 				}
 				if messages.CallbackQuery.Id != "" {

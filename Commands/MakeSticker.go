@@ -3,6 +3,7 @@ package Commands
 import (
 	Functions "Telegram-Bot/Lib/TgFunctions"
 	"Telegram-Bot/Lib/TgTypes"
+	"Telegram-Bot/Settings"
 	"bytes"
 	"fmt"
 	"io"
@@ -74,7 +75,7 @@ func MakeSticker(baseUrl, apiToken string, message *TgTypes.MessageType) (*TgTyp
 		return nil, err
 	}
 
-	packName := "x" + fmt.Sprint(uint64(message.Chat.Id)) + "_by_AB22TGBot"
+	packName := "x" + fmt.Sprint(uint64(message.Chat.Id)) + "_by_" + Settings.BotName[1:]
 	fmt.Println("Packname", packName)
 	var stickUserId int64
 	var title string

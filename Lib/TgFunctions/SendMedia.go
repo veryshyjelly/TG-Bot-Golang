@@ -15,35 +15,40 @@ import (
 	"time"
 )
 
-type SendStickerQuery struct {
-	ChatId                   int64  `json:"chat_id"`
-	Sticker                  string `json:"sticker"`
-	DisableNotification      bool   `json:"disable_notification,omitempty"`
-	ProtectContent           bool   `json:"protect_content,omitempty"`
-	ReplyToMessageId         int64  `json:"reply_to_message_id,omitempty"`
-	AllowSendingWithoutReply bool   `json:"allow_sending_without_reply,omitempty"`
-	//ReplyMarkup              InlineKeyboardMarkupType `json:"reply_markup,omitempty"`
-}
+type MediaType string
 
-type SendStickerResult struct {
+const (
+	Video     MediaType = "/sendVideo"
+	Audio     MediaType = "/sendAudio"
+	Photo     MediaType = "/sendPhoto"
+	Document  MediaType = "/sendDocument"
+	Animation MediaType = "/sendAnimation"
+	Sticker   MediaType = "/sendSticker"
+)
+
+type SendMediaResult struct {
 	Ok          bool                `json:"ok"`
 	Result      TgTypes.MessageType `json:"result"`
 	ErrorCode   int                 `json:"error_code"`
 	Description string              `json:"description"`
 }
 
-func SendStickerByUrl(baseUrl, stickerUrl string, chatId, replyId int64, isProtected bool) (*TgTypes.MessageType, error) {
-	query, err := json.Marshal(SendStickerQuery{
-		ChatId:           chatId,
-		Sticker:          stickerUrl,
-		ProtectContent:   isProtected,
-		ReplyToMessageId: replyId,
-	})
+func SendMediaByUrl(baseUrl, Url string, mediaType MediaType, chatId, replyId int64, caption string, isProtected bool) (*TgTypes.MessageType, error) {
+	sendQuery := map[string]interface{}{
+		"chat_id":                              chatId,
+		"caption":                              caption,
+		"parse_mode":                           "HTML",
+		"protect_content":                      isProtected,
+		strings.ToLower(string(mediaType[5:])): Url,
+		"reply_to_message_id":                  replyId,
+	}
+
+	query, err := json.Marshal(sendQuery)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := http.Post(baseUrl+"/sendSticker", "application/json", bytes.NewBuffer(query))
+	resp, err := http.Post(baseUrl+string(mediaType), "application/json", bytes.NewBuffer(query))
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +58,7 @@ func SendStickerByUrl(baseUrl, stickerUrl string, chatId, replyId int64, isProte
 		return nil, err
 	}
 
-	data := SendStickerResult{}
+	data := SendMediaResult{}
 	err = json.Unmarshal(body, &data)
 	if err != nil {
 		return nil, err
@@ -66,18 +71,23 @@ func SendStickerByUrl(baseUrl, stickerUrl string, chatId, replyId int64, isProte
 	return &data.Result, nil
 }
 
-func SendSticker(baseUrl, documentPath string, chatId, replyId int64, isProtected bool) (*TgTypes.MessageType, error) {
+func SendMedia(baseUrl, mediaPath string, mediaType MediaType, chatId, replyId int64, caption string, isProtected bool) (*TgTypes.MessageType, error) {
 	client := &http.Client{Timeout: time.Minute * 20}
 
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
-	file, err := os.Open(documentPath)
+	file, err := os.Open(mediaPath)
 	if err != nil {
 		return nil, err
 	}
 
-	sendQuery := make(map[string]interface{})
-	sendQuery["chat_id"], sendQuery["reply_to_message_id"], sendQuery["title"], sendQuery["protect_content"] = chatId, replyId, file.Name(), isProtected
+	sendQuery := map[string]interface{}{
+		"chat_id":             chatId,
+		"caption":             caption,
+		"parse_mode":          "HTML",
+		"protect_content":     isProtected,
+		"reply_to_message_id": replyId,
+	}
 
 	for k, v := range sendQuery {
 		fw, err := writer.CreateFormField(k)
@@ -87,7 +97,7 @@ func SendSticker(baseUrl, documentPath string, chatId, replyId int64, isProtecte
 		}
 	}
 
-	fw, err := writer.CreateFormFile("sticker", file.Name())
+	fw, err := writer.CreateFormFile(strings.ToLower(string(mediaType[5:])), file.Name())
 	_, err = io.Copy(fw, file)
 	if err != nil {
 		return nil, err
@@ -103,7 +113,7 @@ func SendSticker(baseUrl, documentPath string, chatId, replyId int64, isProtecte
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", baseUrl+"/sendSticker", bytes.NewReader(body.Bytes()))
+	req, err := http.NewRequest("POST", baseUrl+string(mediaType), bytes.NewReader(body.Bytes()))
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +129,7 @@ func SendSticker(baseUrl, documentPath string, chatId, replyId int64, isProtecte
 		return nil, err
 	}
 
-	data := SendStickerResult{}
+	data := SendMediaResult{}
 	err = json.Unmarshal(sendResult, &data)
 	if err != nil {
 		return nil, err
