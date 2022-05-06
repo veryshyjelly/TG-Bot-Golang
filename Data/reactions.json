@@ -27,6 +27,11 @@
 					"file_id": "CAACAgUAAxkBAAINSGJmrX5Ps49mxCU4KcK7nIe1b94uAAIVBwACPW84Vw8tcO-e1Kp1JAQ",
 					"trigger": "hehe",
 					"file_type": "sticker"
+				},
+				{
+					"file_id": "BQACAgUAAxkBAAIPnWJqFV7fjExH-vGsf25eaYyN_HObAAKEBAACZZRQV-YwP0oWAeqBJAQ",
+					"trigger": "ass",
+					"file_type": "document"
 				}
 			]
 		},
@@ -372,6 +377,16 @@
 					"file_id": "CAACAgUAAx0CZGeNcQACFQliZBbPX8cv7nEMYWpar4jQsyQ0agACkQUAAmS9WFak-x0IUxO_OCQE",
 					"trigger": "mera sticker",
 					"file_type": "sticker"
+				},
+				{
+					"file_id": "5827",
+					"trigger": "gudiya",
+					"file_type": "message"
+				},
+				{
+					"file_id": "5844",
+					"trigger": "a",
+					"file_type": "message"
 				}
 			]
 		},

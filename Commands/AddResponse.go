@@ -4,6 +4,7 @@ import (
 	Functions "Telegram-Bot/Lib/TgFunctions"
 	"Telegram-Bot/Lib/TgTypes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"strings"
 )
@@ -45,9 +46,10 @@ func AddResponse(baseUrl, trigger string, chatId, messageId int64, repliedMessag
 		fileType = "photo"
 	} else if repliedMessage.Document.FileId != "" {
 		fileType = "document"
+		fileId = repliedMessage.Document.FileId
 	} else {
-		_, err := Functions.SendTextMessage(baseUrl, "Please reply to a photo or sticker or audio or gif or document.", chatId, messageId)
-		return err
+		fileType = "message"
+		fileId = fmt.Sprint(repliedMessage.MessageId)
 	}
 
 	storage, _ := ioutil.ReadFile("Data/reactions.json")
