@@ -2,6 +2,8 @@ package main
 
 import (
 	"Telegram-Bot/Commands"
+	"Telegram-Bot/Lib/MediaFunctions"
+	"Telegram-Bot/Lib/StickerMethods"
 	"Telegram-Bot/Lib/TgFunctions"
 	"Telegram-Bot/Lib/TgTypes"
 	"Telegram-Bot/Settings"
@@ -70,7 +72,7 @@ func main() {
 						log.Println(err)
 					}
 					if USER.CanDeleteMessages == true || USER.Status == "creator" || thisChatId > 0 {
-						_, err = Functions.RemoveSticker(baseUrl, thisChatId, thisMessageId, messages.Message.ReplyToMessage)
+						_, err = StickerMethods.RemoveSticker(baseUrl, thisChatId, thisMessageId, messages.Message.ReplyToMessage)
 					} else {
 						_, err = Functions.SendTextMessage(baseUrl, "You can't remove the sticker.", thisChatId, thisMessageId)
 					}
@@ -82,7 +84,7 @@ func main() {
 					if messages.Message.From.Id != Settings.OwnerId {
 						_, err = Functions.SendTextMessage(baseUrl, "Sorry you can't access the data.", thisChatId, thisMessageId)
 					} else {
-						_, err = Functions.SendMedia(baseUrl, "Data/reactions.json", Functions.Document, thisChatId, thisMessageId, "bot data here", false)
+						_, err = MediaFunctions.SendMedia(baseUrl, "Data/reactions.json", MediaFunctions.Document, thisChatId, thisMessageId, "bot data here", false)
 					}
 				}
 				if messages.CallbackQuery.Id != "" {

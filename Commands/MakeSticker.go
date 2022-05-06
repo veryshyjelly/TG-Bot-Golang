@@ -1,6 +1,7 @@
 package Commands
 
 import (
+	"Telegram-Bot/Lib/StickerMethods"
 	Functions "Telegram-Bot/Lib/TgFunctions"
 	"Telegram-Bot/Lib/TgTypes"
 	"Telegram-Bot/Settings"
@@ -70,7 +71,7 @@ func MakeSticker(baseUrl, apiToken string, message *TgTypes.MessageType) (*TgTyp
 		return nil, err
 	}
 
-	upStickerFile, err := Functions.UploadStickerFile(baseUrl, message.From.Id, resImage)
+	upStickerFile, err := StickerMethods.UploadStickerFile(baseUrl, message.From.Id, resImage)
 	if err != nil {
 		return nil, err
 	}
@@ -87,8 +88,8 @@ func MakeSticker(baseUrl, apiToken string, message *TgTypes.MessageType) (*TgTyp
 		stickUserId = message.From.Id
 	}
 
-	if set, _ := Functions.GetStickerSet(baseUrl, packName); set != nil {
-		if ok, _ := Functions.AddStickerToSet(baseUrl, packName, upStickerFile.FileId, "😂", stickUserId); ok {
+	if set, _ := StickerMethods.GetStickerSet(baseUrl, packName); set != nil {
+		if ok, _ := StickerMethods.AddStickerToSet(baseUrl, packName, upStickerFile.FileId, "😂", stickUserId); ok {
 			return Functions.SendTextMessage(baseUrl, "Sticker added to <a href=\"https://t.me/addstickers/"+packName+"\">Pack</a>", message.Chat.Id, message.MessageId)
 
 		} else {
@@ -97,7 +98,7 @@ func MakeSticker(baseUrl, apiToken string, message *TgTypes.MessageType) (*TgTyp
 		}
 
 	} else {
-		if ok, err := Functions.CreateStickerSet(baseUrl, packName, title, "😂", upStickerFile.FileId, stickUserId); ok {
+		if ok, err := StickerMethods.CreateStickerSet(baseUrl, packName, title, "😂", upStickerFile.FileId, stickUserId); ok {
 			return Functions.SendTextMessage(baseUrl, "Sticker added to <a href=\"https://t.me/addstickers/"+packName+"\">Pack</a>", message.Chat.Id, message.MessageId)
 
 		} else {

@@ -1,4 +1,4 @@
-package Functions
+package MediaFunctions
 
 import (
 	"Telegram-Bot/Lib/TgTypes"

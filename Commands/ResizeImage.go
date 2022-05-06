@@ -1,6 +1,7 @@
 package Commands
 
 import (
+	"Telegram-Bot/Lib/MediaFunctions"
 	Functions "Telegram-Bot/Lib/TgFunctions"
 	"Telegram-Bot/Lib/TgTypes"
 	"bytes"
@@ -73,5 +74,5 @@ func SendResizeImage(baseUrl, apiToken string, message *TgTypes.MessageType) (*T
 		return nil, err
 	}
 
-	return Functions.SendPhotoByReader(baseUrl, resImage, message, "here", false)
+	return MediaFunctions.SendPhotoByReader(baseUrl, resImage, message, "here", false)
 }

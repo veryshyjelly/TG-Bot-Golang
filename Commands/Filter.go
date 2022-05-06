@@ -1,7 +1,8 @@
 package Commands
 
 import (
-	Functions "Telegram-Bot/Lib/TgFunctions"
+	"Telegram-Bot/Lib/MediaFunctions"
+	"Telegram-Bot/Lib/MessageMethods"
 	"Telegram-Bot/Lib/TgTypes"
 	"encoding/json"
 	"io/ioutil"
@@ -31,28 +32,28 @@ LOOP:
 				if strings.Contains(" "+textBody+" ", " "+filters.Trigger+" ") {
 					var repliedMessage *TgTypes.MessageType
 					var respondId int64
-					var sendMode Functions.MediaType
+					var sendMode MediaFunctions.MediaType
 					switch filters.FileType {
 					case "sticker":
-						sendMode = Functions.Sticker
+						sendMode = MediaFunctions.Sticker
 					case "animation":
-						sendMode = Functions.Animation
+						sendMode = MediaFunctions.Animation
 					case "audio":
-						sendMode = Functions.Audio
+						sendMode = MediaFunctions.Audio
 					case "photo":
-						sendMode = Functions.Photo
+						sendMode = MediaFunctions.Photo
 					case "video":
-						sendMode = Functions.Video
+						sendMode = MediaFunctions.Video
 					case "document":
-						sendMode = Functions.Document
+						sendMode = MediaFunctions.Document
 					case "message":
 						copyID, _ := strconv.ParseInt(filters.FileId, 10, 64)
-						respondId, err = Functions.CopyMessage(baseUrl, chatId, chatId, copyID, messageId, "", true)
+						respondId, err = MessageMethods.CopyMessage(baseUrl, chatId, chatId, copyID, messageId, "", true)
 
 					}
 
 					if filters.FileType != "message" {
-						repliedMessage, err = Functions.SendMediaByUrl(baseUrl, filters.FileId, sendMode, chatId, messageId, "", true)
+						repliedMessage, err = MediaFunctions.SendMediaByUrl(baseUrl, filters.FileId, sendMode, chatId, messageId, "", true)
 						respondId = repliedMessage.MessageId
 					}
 
@@ -63,7 +64,7 @@ LOOP:
 					switch filters.FileType {
 					case "sticker", "animation", "photo":
 						go func() {
-							_, err := Functions.DelayDelete(baseUrl, delay, respondId, chatId)
+							_, err := MessageMethods.DelayDelete(baseUrl, delay, respondId, chatId)
 							if err != nil {
 								log.Println(err)
 							}
@@ -71,7 +72,7 @@ LOOP:
 
 					default:
 						go func() {
-							_, err := Functions.DelayDelete(baseUrl, 600, respondId, chatId)
+							_, err := MessageMethods.DelayDelete(baseUrl, 600, respondId, chatId)
 							if err != nil {
 								log.Println(err)
 							}

@@ -1,4 +1,4 @@
-package Functions
+package StickerMethods
 
 import (
 	"Telegram-Bot/Lib/TgTypes"
