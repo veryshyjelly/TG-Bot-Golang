@@ -101,6 +101,6 @@ func main() {
 
 			offset = messages.UpdateId + 1
 		}
-		time.Sleep(25 * time.Millisecond)
+		time.Sleep(80 * time.Millisecond)
 	}
 }
