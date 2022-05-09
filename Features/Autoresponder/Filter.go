@@ -1,4 +1,4 @@
-package Commands
+package Autoresponder
 
 import (
 	"Telegram-Bot/Lib/MediaFunctions"

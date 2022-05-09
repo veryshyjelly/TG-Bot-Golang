@@ -1,17 +1,12 @@
-package Commands
+package StickerMaker
 
 import (
-	"Telegram-Bot/Lib/MediaFunctions"
-	Functions "Telegram-Bot/Lib/TgFunctions"
-	"Telegram-Bot/Lib/TgTypes"
 	"bytes"
 	"github.com/sunshineplan/imgconv"
 	"image"
 	"image/draw"
 	"image/png"
 	"io"
-	"net/http"
-	"net/url"
 )
 
 func ResizeImage(data io.Reader) (*bytes.Buffer, error) {
@@ -52,27 +47,4 @@ func ResizeImage(data io.Reader) (*bytes.Buffer, error) {
 	}
 
 	return res, nil
-}
-
-func SendResizeImage(baseUrl, apiToken string, message *TgTypes.MessageType) (*TgTypes.MessageType, error) {
-	imagePath, err := Functions.GetFile(baseUrl, message.Document.FileId)
-	imageLink := "https://api.telegram.org/file/bot" + apiToken + "/" + url.QueryEscape(imagePath.FileId)
-
-	res, err := http.Get(imageLink)
-	if err != nil {
-		return nil, err
-	}
-
-	data := new(bytes.Buffer)
-	_, err = io.Copy(data, res.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	resImage, err := ResizeImage(data)
-	if err != nil {
-		return nil, err
-	}
-
-	return MediaFunctions.SendPhotoByReader(baseUrl, resImage, message, "here", false)
 }

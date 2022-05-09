@@ -1,7 +1,7 @@
-package Commands
+package Autoresponder
 
 import (
-	Functions "Telegram-Bot/Lib/TgFunctions"
+	Functions "Telegram-Bot/Lib/MessageMethods"
 	"Telegram-Bot/Lib/TgTypes"
 	"encoding/json"
 	"io/ioutil"

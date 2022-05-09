@@ -1,7 +1,7 @@
-package Commands
+package Autoresponder
 
 import (
-	Functions "Telegram-Bot/Lib/TgFunctions"
+	Functions "Telegram-Bot/Lib/MessageMethods"
 	"Telegram-Bot/Lib/TgTypes"
 	"encoding/json"
 	"fmt"
@@ -25,6 +25,11 @@ type FilterDataArray struct {
 }
 
 func AddResponse(baseUrl, trigger string, chatId, messageId int64, repliedMessage *TgTypes.MessageType) error {
+	if repliedMessage == nil {
+		_, err := Functions.SendTextMessage(baseUrl, "Please reply to a message", chatId, messageId)
+		return err
+	}
+
 	if trigger == "" {
 		_, err := Functions.SendTextMessage(baseUrl, "Add some text", chatId, messageId)
 		return err

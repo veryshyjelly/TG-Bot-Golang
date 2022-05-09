@@ -1,4 +1,4 @@
-package Commands
+package Features
 
 import (
 	Functions "Telegram-Bot/Lib/TgFunctions"
@@ -13,12 +13,15 @@ func MenuCommand(baseUrl string, message *TgTypes.MessageType) (*TgTypes.Message
 	row1 = append(row1, TgTypes.InlineKeyboardButtonType{Text: "Stickers", CallbackData: "stickerMenu"})
 	row1 = append(row1, TgTypes.InlineKeyboardButtonType{Text: "Filter", CallbackData: "filterMenu"})
 	buttons = append(buttons, row1)
+	row2 := make([]TgTypes.InlineKeyboardButtonType, 0)
+	row2 = append(row2, TgTypes.InlineKeyboardButtonType{Text: "Exit", CallbackData: "deleteMessage"})
+	buttons = append(buttons, row2)
 
 	return Functions.SendButtons(baseUrl, menuText, message.Chat.Id, message.MessageId, TgTypes.InlineKeyboardMarkupType{InlineKeyboard: buttons})
 }
 
 func StickerMenu(baseUrl, CallBackId string) error {
-	text := "/sticker - add image to sticker pack \n/remove - remove sticker from pack \n/resize - resize image to sticker compatible"
+	text := "/sticker - add image to sticker pack \n/remove - remove sticker from pack"
 	_, err := Functions.AnswerCallbackQuery(baseUrl, CallBackId, text, true)
 	return err
 }
