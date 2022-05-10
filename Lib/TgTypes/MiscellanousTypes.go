@@ -36,7 +36,7 @@ type ProximityAlertTriggeredType struct {
 }
 
 type InlineKeyboardMarkupType struct {
-	InlineKeyboard [][]InlineKeyboardButtonType `json:"inline_keyboard"`
+	InlineKeyboard [][]InlineKeyboardButtonType `json:"inline_keyboard,omitempty"`
 }
 
 type InlineKeyboardButtonType struct {

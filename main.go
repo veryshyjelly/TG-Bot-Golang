@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Telegram-Bot/Globals"
 	"Telegram-Bot/Handlers"
 	"Telegram-Bot/Lib/TgFunctions"
 	"Telegram-Bot/Lib/TgTypes"
@@ -10,6 +11,11 @@ import (
 )
 
 func main() {
+	err := Globals.ParseVioApi()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	var offset, limit int64 = 0, 100
 	for {
 		response, err := Functions.GetMessage(offset, limit)

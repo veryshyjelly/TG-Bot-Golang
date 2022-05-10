@@ -22,20 +22,20 @@ type EditTextQuery struct {
 }
 
 type EditCaptionQuery struct {
-	ChatId          int64                            `json:"chat_id"`
-	MessageId       int64                            `json:"message_id"`
-	InlineMessageId string                           `json:"inline_message_id"`
-	Caption         string                           `json:"caption"`
-	ParseMode       string                           `json:"parse_mode"`
-	CaptionEntities []TgTypes.MessageEntityType      `json:"caption_entities"`
+	ChatId          int64                            `json:"chat_id,omitempty"`
+	MessageId       int64                            `json:"message_id,omitempty"`
+	InlineMessageId string                           `json:"inline_message_id,omitempty"`
+	Caption         string                           `json:"caption,omitempty"`
+	ParseMode       string                           `json:"parse_mode,omitempty"`
+	CaptionEntities []TgTypes.MessageEntityType      `json:"caption_entities,omitempty"`
 	ReplyMarkup     TgTypes.InlineKeyboardMarkupType `json:"reply_markup"`
 }
 
 type EditMarkupQuery struct {
-	ChatId          int64                            `json:"chat_id"`
-	MessageId       int64                            `json:"message_id"`
-	InlineMessageId string                           `json:"inline_message_id"`
-	ReplyMarkup     TgTypes.InlineKeyboardMarkupType `json:"reply_markup"`
+	ChatId          int64                            `json:"chat_id,omitempty"`
+	MessageId       int64                            `json:"message_id,omitempty"`
+	InlineMessageId string                           `json:"inline_message_id,omitempty"`
+	ReplyMarkup     TgTypes.InlineKeyboardMarkupType `json:"reply_markup,omitempty"`
 }
 
 type EditResult struct {
@@ -45,12 +45,13 @@ type EditResult struct {
 	Description string              `json:"description"`
 }
 
-func EditMessageText(text string, chatId, messageId int64, inlineMessId string) (*TgTypes.MessageType, error) {
+func EditMessageText(text string, replyMarkup TgTypes.InlineKeyboardMarkupType, chatId, messageId int64, inlineMessId string) (*TgTypes.MessageType, error) {
 	query, err := json.Marshal(EditTextQuery{
 		ChatId:          chatId,
 		MessageId:       messageId,
 		InlineMessageId: inlineMessId,
 		Text:            text,
+		ReplyMarkup:     replyMarkup,
 		ParseMode:       "HTML",
 	})
 	if err != nil {

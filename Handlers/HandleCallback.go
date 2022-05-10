@@ -3,9 +3,11 @@ package Handlers
 import (
 	"Telegram-Bot/Features"
 	"Telegram-Bot/Features/Downloader"
+	"Telegram-Bot/Features/PhotoFilter"
 	"Telegram-Bot/Lib/MessageMethods"
 	Functions "Telegram-Bot/Lib/TgFunctions"
 	"Telegram-Bot/Lib/TgTypes"
+	"strings"
 )
 
 func HandleCallback(query *TgTypes.CallbackQueryType) (*TgTypes.MessageType, error) {
@@ -13,12 +15,10 @@ func HandleCallback(query *TgTypes.CallbackQueryType) (*TgTypes.MessageType, err
 	switch query.Data {
 
 	case "stickerMenu":
-		err := Features.StickerMenu(query.Id)
-		return nil, err
+		return Features.StickerMenu(query.Id, &query.Message)
 
 	case "filterMenu":
-		err := Features.FilterMenu(query.Id)
-		return nil, err
+		return Features.FilterMenu(query.Id, &query.Message)
 
 	case "deleteMessage":
 		_, err := MessageMethods.DeleteMessage(query.Message.Chat.Id, query.Message.MessageId)
@@ -30,9 +30,25 @@ func HandleCallback(query *TgTypes.CallbackQueryType) (*TgTypes.MessageType, err
 	case "ytVideo":
 		return Downloader.HandleYoutubeVideo(query.Id, &query.Message)
 
-	default:
-		_, err := Functions.AnswerCallbackQuery(query.Id, "Answering Query", true)
-		return nil, err
+	case "GoBack":
+		return Features.BackMenu(query.Id, &query.Message)
 
+	default:
+		x := strings.Split(query.Data, " ")
+		if len(x) < 2 {
+			_, err := Functions.AnswerCallbackQuery(query.Id, "Answering Query", true)
+			return nil, err
+		}
+
+		switch x[0] {
+		case "filterNext":
+			return PhotoFilter.HandleFilterNext(x[1], query.Id, &query.Message)
+
+		case "photoFilter":
+			return PhotoFilter.HandlePhotoFilter(x[1], query.Id, &query.Message)
+
+		}
+
+		return nil, nil
 	}
 }

@@ -26,4 +26,11 @@ var (
 		Text:         "Filter",
 		CallbackData: "filterMenu",
 	}
+	BackButton = TgTypes.InlineKeyboardButtonType{
+		Text:         "Back",
+		CallbackData: "GoBack",
+	}
+
+	VioAPIData       = make(map[string]VioFeatureType)
+	PhotoFilterQueue = make(map[int64]string)
 )

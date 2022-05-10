@@ -24,20 +24,31 @@ func HandleCommand(message *TgTypes.MessageType) (*TgTypes.MessageType, error) {
 	switch command {
 	case "":
 		err = Autoresponder.FilterMessage(textBody, thisChatId, thisMessageId, Settings.Delay)
+
 	case "menu" + Settings.BotId, "menu":
 		return Features.MenuCommand(message)
+
 	case "add", "add" + Settings.BotId:
 		err = Autoresponder.AddResponse(joinedArgument, thisChatId, thisMessageId, message.ReplyToMessage)
+
 	case "revoke", "revoke" + Settings.BotId:
 		_, err = Autoresponder.StopResponse(joinedArgument, thisChatId, thisMessageId)
+
 	case "filters", "filters" + Settings.BotId:
 		return Autoresponder.ReactionList(message)
+
 	case "sticker", "sticker" + Settings.BotId:
 		return StickerMaker.MakeSticker(thisChatId, thisMessageId, message.ReplyToMessage)
+
 	case "photo", "photo" + Settings.BotId:
 		return PhotoFilter.StickerToImage(thisChatId, thisMessageId, message.ReplyToMessage)
+
 	case "play", "play" + Settings.BotId:
 		return Downloader.YoutubePlay(joinedArgument, thisChatId, thisMessageId)
+
+	case "pfilter", "pfilter" + Settings.BotId:
+		return PhotoFilter.HandleFilterPrompt(message)
+
 	case "remove", "remove" + Settings.BotId:
 		USER, err := Functions.GetChatMember(thisChatId, message.From.Id)
 		if err != nil {
