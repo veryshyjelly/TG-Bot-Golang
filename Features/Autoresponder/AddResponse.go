@@ -24,14 +24,14 @@ type FilterDataArray struct {
 	Data []ChatFileFilter `json:"data"`
 }
 
-func AddResponse(baseUrl, trigger string, chatId, messageId int64, repliedMessage *TgTypes.MessageType) error {
+func AddResponse(trigger string, chatId, messageId int64, repliedMessage *TgTypes.MessageType) error {
 	if repliedMessage == nil {
-		_, err := Functions.SendTextMessage(baseUrl, "Please reply to a message", chatId, messageId)
+		_, err := Functions.SendTextMessage("Please reply to a message", chatId, messageId)
 		return err
 	}
 
 	if trigger == "" {
-		_, err := Functions.SendTextMessage(baseUrl, "Add some text", chatId, messageId)
+		_, err := Functions.SendTextMessage("Add some text", chatId, messageId)
 		return err
 	}
 

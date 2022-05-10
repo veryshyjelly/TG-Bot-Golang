@@ -107,3 +107,23 @@ type SendVideoQuery struct {
 	AllowSendingWithoutReply bool                `json:"allow_sending_without_reply,omitempty"`
 	//ReplyMarkup                 InlineKeyboardMarkupType `json:"reply_markup,omitempty"`
 }
+
+type SendPhotoResult struct {
+	Ok          bool        `json:"ok"`
+	Result      MessageType `json:"result"`
+	ErrorCode   int         `json:"error_code"`
+	Description string      `json:"description"`
+}
+
+type SendPhotoQuery struct {
+	ChatId                   int64               `json:"chat_id"`
+	Photo                    string              `json:"photo"` // Or multipart file
+	Caption                  string              `json:"caption,omitempty"`
+	ParseMode                string              `json:"parse_mode,omitempty"`
+	CaptionEntities          []MessageEntityType `json:"caption_entities,omitempty"`
+	DisableNotification      bool                `json:"disable_notification,omitempty"`
+	ProtectContent           bool                `json:"protect_content,omitempty"`
+	ReplyToMessageId         int64               `json:"reply_to_message_id,omitempty"`
+	AllowSendingWithoutReply bool                `json:"allow_sending_without_reply,omitempty"`
+	//ReplyMarkup              InlineKeyboardMarkupType `json:"reply_markup,omitempty"`
+}

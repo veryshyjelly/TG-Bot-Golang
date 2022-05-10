@@ -7,10 +7,10 @@ import (
 	"strings"
 )
 
-func StopResponse(baseUrl, trigger string, chatId, messageId int64) (bool, error) {
+func StopResponse(trigger string, chatId, messageId int64) (bool, error) {
 
 	if trigger == "" {
-		_, err := Functions.SendTextMessage(baseUrl, "What to revoke?", chatId, messageId)
+		_, err := Functions.SendTextMessage("What to revoke?", chatId, messageId)
 		if err != nil {
 			return false, err
 		}
@@ -38,7 +38,7 @@ LOOP:
 				if stickerData.Trigger == trigger {
 					copy(chatData.Filters[k:], chatData.Filters[k+1:])
 					chatData.Filters = chatData.Filters[:len(chatData.Filters)-1]
-					_, err = Functions.SendTextMessage(baseUrl, "revoked response for <code>"+trigger+"</code>", chatId, messageId)
+					_, err = Functions.SendTextMessage("revoked response for <code>"+trigger+"</code>", chatId, messageId)
 					if err != nil {
 						return false, err
 					}
@@ -53,7 +53,7 @@ LOOP:
 	}
 
 	if !done {
-		_, err = Functions.SendTextMessage(baseUrl, "The text was not set to a response.", chatId, messageId)
+		_, err = Functions.SendTextMessage("The text was not set to a response.", chatId, messageId)
 		if err != nil {
 			return false, err
 		}

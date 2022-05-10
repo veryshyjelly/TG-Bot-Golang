@@ -2,6 +2,7 @@ package StickerMethods
 
 import (
 	"Telegram-Bot/Lib/TgTypes"
+	"Telegram-Bot/Settings"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -16,7 +17,7 @@ type AddStickerResult struct {
 	Description string `json:"description"`
 }
 
-func AddStickerToSet(baseUrl, name, pngSticker, emoji string, userId int64) (bool, error) {
+func AddStickerToSet(name, pngSticker, emoji string, userId int64) (bool, error) {
 	query, err := json.Marshal(TgTypes.AddStickerQuery{
 		UserId:     userId,
 		Name:       name,
@@ -27,7 +28,7 @@ func AddStickerToSet(baseUrl, name, pngSticker, emoji string, userId int64) (boo
 		return false, err
 	}
 
-	resp, err := http.Post(baseUrl+"/addStickerToSet", "application/json", bytes.NewBuffer(query))
+	resp, err := http.Post(Settings.BaseUrl+"/addStickerToSet", "application/json", bytes.NewBuffer(query))
 	if err != nil {
 		return false, err
 	}

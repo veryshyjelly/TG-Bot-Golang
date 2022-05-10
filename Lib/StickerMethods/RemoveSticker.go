@@ -3,6 +3,7 @@ package StickerMethods
 import (
 	"Telegram-Bot/Lib/MessageMethods"
 	"Telegram-Bot/Lib/TgTypes"
+	"Telegram-Bot/Settings"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -32,15 +33,15 @@ type CreatedSticker struct {
 	Data []ChatStickerSet `json:"data"`
 }
 
-func RemoveSticker(baseUrl string, chatId int64, messageId int64, repliedMessage *TgTypes.MessageType) (bool, error) {
+func RemoveSticker(chatId int64, messageId int64, repliedMessage *TgTypes.MessageType) (bool, error) {
 	if repliedMessage == nil || repliedMessage.Sticker.FileId == "" {
-		_, err := MessageMethods.SendTextMessage(baseUrl, "Reply to the sticker.", chatId, messageId)
+		_, err := MessageMethods.SendTextMessage("Reply to the sticker.", chatId, messageId)
 		return false, err
 	}
 
 	//fmt.Println(repliedMessage.Sticker.SetName)
 	if repliedMessage.Sticker.SetName != "x"+fmt.Sprint(uint64(repliedMessage.Chat.Id))+"_by_AB22TGBot" {
-		_, err := MessageMethods.SendTextMessage(baseUrl, "The pack is not of this group.", chatId, messageId)
+		_, err := MessageMethods.SendTextMessage("The pack is not of this group.", chatId, messageId)
 		return false, err
 	}
 
@@ -49,7 +50,7 @@ func RemoveSticker(baseUrl string, chatId int64, messageId int64, repliedMessage
 		return false, err
 	}
 
-	resp, err := http.Post(baseUrl+"/deleteStickerFromSet", "application/json", bytes.NewBuffer(query))
+	resp, err := http.Post(Settings.BaseUrl+"/deleteStickerFromSet", "application/json", bytes.NewBuffer(query))
 	if err != nil {
 		return false, err
 	}
@@ -69,7 +70,7 @@ func RemoveSticker(baseUrl string, chatId int64, messageId int64, repliedMessage
 		return false, errors.New(data.Description)
 	}
 
-	_, err = MessageMethods.SendTextMessage(baseUrl, "The sticker was successfully removed.", chatId, messageId)
+	_, err = MessageMethods.SendTextMessage("The sticker was successfully removed.", chatId, messageId)
 
 	return data.Result, err
 }

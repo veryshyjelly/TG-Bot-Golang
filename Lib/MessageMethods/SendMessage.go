@@ -2,6 +2,7 @@ package MessageMethods
 
 import (
 	"Telegram-Bot/Lib/TgTypes"
+	"Telegram-Bot/Settings"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -29,7 +30,7 @@ type SendMessageResult struct {
 	Description string              `json:"description"`
 }
 
-func SendTextMessage(baseUrl, text string, chatId int64, replyId int64) (*TgTypes.MessageType, error) {
+func SendTextMessage(text string, chatId int64, replyId int64) (*TgTypes.MessageType, error) {
 	query, err := json.Marshal(SendMessageQuery{
 		ChatId:           chatId,
 		Text:             text,
@@ -40,7 +41,7 @@ func SendTextMessage(baseUrl, text string, chatId int64, replyId int64) (*TgType
 		return nil, err
 	}
 
-	resp, err := http.Post(baseUrl+"/sendMessage", "application/json", bytes.NewBuffer(query))
+	resp, err := http.Post(Settings.BaseUrl+"/sendMessage", "application/json", bytes.NewBuffer(query))
 	if err != nil {
 		return nil, err
 	}

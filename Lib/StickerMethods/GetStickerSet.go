@@ -2,6 +2,7 @@ package StickerMethods
 
 import (
 	"Telegram-Bot/Lib/TgTypes"
+	"Telegram-Bot/Settings"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -20,13 +21,13 @@ type StickerSetResult struct {
 	Description string `json:"description"`
 }
 
-func GetStickerSet(baseUrl, Name string) (*TgTypes.StickerSetType, error) {
+func GetStickerSet(Name string) (*TgTypes.StickerSetType, error) {
 	query, err := json.Marshal(StickerSetQuery{Name: Name})
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := http.Post(baseUrl+"/getStickerSet", "application/json", bytes.NewBuffer(query))
+	resp, err := http.Post(Settings.BaseUrl+"/getStickerSet", "application/json", bytes.NewBuffer(query))
 	if err != nil {
 		return nil, err
 	}

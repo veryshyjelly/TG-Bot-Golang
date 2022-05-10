@@ -2,6 +2,7 @@ package MessageMethods
 
 import (
 	"Telegram-Bot/Lib/TgTypes"
+	"Telegram-Bot/Settings"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -22,7 +23,7 @@ type ForwardResult struct {
 	Description string              `json:"description"`
 }
 
-func ForwardMessage(baseUrl string, toChatId, fromChatId int64, messageId int64) (*TgTypes.MessageType, error) {
+func ForwardMessage(toChatId, fromChatId int64, messageId int64) (*TgTypes.MessageType, error) {
 	query, err := json.Marshal(ForwardQuery{
 		ChatId:     toChatId,
 		FromChatId: fromChatId,
@@ -32,7 +33,7 @@ func ForwardMessage(baseUrl string, toChatId, fromChatId int64, messageId int64)
 		return nil, err
 	}
 
-	resp, err := http.Post(baseUrl+"/forwardMessage", "application/json", bytes.NewBuffer(query))
+	resp, err := http.Post(Settings.BaseUrl+"/forwardMessage", "application/json", bytes.NewBuffer(query))
 	if err != nil {
 		return nil, err
 	}

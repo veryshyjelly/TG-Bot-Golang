@@ -1,8 +1,8 @@
 package Autoresponder
 
 import (
-	"Telegram-Bot/Lib/MediaFunctions"
 	"Telegram-Bot/Lib/MessageMethods"
+	"Telegram-Bot/Lib/TgFunctions"
 	"Telegram-Bot/Lib/TgTypes"
 	"encoding/json"
 	"io/ioutil"
@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func FilterMessage(baseUrl, textBody string, chatId, messageId int64, delay int) error {
+func FilterMessage(textBody string, chatId, messageId int64, delay int) error {
 	storage, err := ioutil.ReadFile("Data/reactions.json")
 	if err != nil {
 		return err
@@ -32,28 +32,28 @@ LOOP:
 				if strings.Contains(" "+textBody+" ", " "+filters.Trigger+" ") {
 					var repliedMessage *TgTypes.MessageType
 					var respondId int64
-					var sendMode MediaFunctions.MediaType
+					var sendMode Functions.MediaType
 					switch filters.FileType {
 					case "sticker":
-						sendMode = MediaFunctions.Sticker
+						sendMode = Functions.Sticker
 					case "animation":
-						sendMode = MediaFunctions.Animation
+						sendMode = Functions.Animation
 					case "audio":
-						sendMode = MediaFunctions.Audio
+						sendMode = Functions.Audio
 					case "photo":
-						sendMode = MediaFunctions.Photo
+						sendMode = Functions.Photo
 					case "video":
-						sendMode = MediaFunctions.Video
+						sendMode = Functions.Video
 					case "document":
-						sendMode = MediaFunctions.Document
+						sendMode = Functions.Document
 					case "message":
 						copyID, _ := strconv.ParseInt(filters.FileId, 10, 64)
-						respondId, err = MessageMethods.CopyMessage(baseUrl, chatId, chatId, copyID, messageId, "", true)
+						respondId, err = MessageMethods.CopyMessage(chatId, chatId, copyID, messageId, "", true)
 
 					}
 
 					if filters.FileType != "message" {
-						repliedMessage, err = MediaFunctions.SendMediaByUrl(baseUrl, filters.FileId, sendMode, chatId, messageId, "", true)
+						repliedMessage, err = Functions.SendMediaByUrl(filters.FileId, sendMode, chatId, messageId, "", true)
 						respondId = repliedMessage.MessageId
 					}
 
@@ -64,7 +64,7 @@ LOOP:
 					switch filters.FileType {
 					case "sticker", "animation", "photo":
 						go func() {
-							_, err := MessageMethods.DelayDelete(baseUrl, delay, respondId, chatId)
+							_, err := MessageMethods.DelayDelete(delay, respondId, chatId)
 							if err != nil {
 								log.Println(err)
 							}
@@ -72,7 +72,7 @@ LOOP:
 
 					default:
 						go func() {
-							_, err := MessageMethods.DelayDelete(baseUrl, 600, respondId, chatId)
+							_, err := MessageMethods.DelayDelete(600, respondId, chatId)
 							if err != nil {
 								log.Println(err)
 							}

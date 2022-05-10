@@ -2,6 +2,7 @@ package Functions
 
 import (
 	"Telegram-Bot/Lib/TgTypes"
+	"Telegram-Bot/Settings"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -16,8 +17,8 @@ type UpdateResult struct {
 	Description string               `json:"description"`
 }
 
-func GetMessage(baseUrl string, offset, limit int64) ([]TgTypes.UpdateType, error) {
-	resp, err := http.Get(baseUrl + "/getUpdates" + "?offset=" + fmt.Sprint(offset) + "&limit=" + fmt.Sprint(limit))
+func GetMessage(offset, limit int64) ([]TgTypes.UpdateType, error) {
+	resp, err := http.Get(Settings.BaseUrl + "/getUpdates" + "?offset=" + fmt.Sprint(offset) + "&limit=" + fmt.Sprint(limit))
 	if err != nil {
 		return nil, err
 	}

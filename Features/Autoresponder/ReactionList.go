@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 )
 
-func ReactionList(baseUrl string, message *TgTypes.MessageType) (*TgTypes.MessageType, error) {
+func ReactionList(message *TgTypes.MessageType) (*TgTypes.MessageType, error) {
 	storage, err := ioutil.ReadFile("Data/reactions.json")
 	if err != nil {
 		return nil, err
@@ -30,5 +30,5 @@ func ReactionList(baseUrl string, message *TgTypes.MessageType) (*TgTypes.Messag
 		}
 	}
 
-	return Functions.SendTextMessage(baseUrl, res, message.Chat.Id, message.MessageId)
+	return Functions.SendTextMessage(res, message.Chat.Id, message.MessageId)
 }

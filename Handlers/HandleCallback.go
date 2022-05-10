@@ -2,44 +2,37 @@ package Handlers
 
 import (
 	"Telegram-Bot/Features"
-	"Telegram-Bot/Globals"
-	"Telegram-Bot/Lib/MediaFunctions"
+	"Telegram-Bot/Features/Downloader"
 	"Telegram-Bot/Lib/MessageMethods"
 	Functions "Telegram-Bot/Lib/TgFunctions"
 	"Telegram-Bot/Lib/TgTypes"
 )
 
-func HandleCallback(baseUrl string, query TgTypes.CallbackQueryType) (*TgTypes.MessageType, error) {
-	thisChatId, thisMessageId, _, _, _ := Functions.ParseMessage(&query.Message)
+func HandleCallback(query *TgTypes.CallbackQueryType) (*TgTypes.MessageType, error) {
 
 	switch query.Data {
+
 	case "stickerMenu":
-		err := Features.StickerMenu(baseUrl, query.Id)
+		err := Features.StickerMenu(query.Id)
 		return nil, err
+
 	case "filterMenu":
-		err := Features.FilterMenu(baseUrl, query.Id)
+		err := Features.FilterMenu(query.Id)
 		return nil, err
+
 	case "deleteMessage":
-		_, err := MessageMethods.DeleteMessage(baseUrl, query.Message.Chat.Id, query.Message.MessageId)
+		_, err := MessageMethods.DeleteMessage(query.Message.Chat.Id, query.Message.MessageId)
 		return nil, err
+
 	case "ytAudio":
-		if link, ok := Globals.AudioLinks[thisMessageId]; ok {
-			Functions.AnswerCallbackQuery(baseUrl, query.Id, "in progress...", true)
-			return MediaFunctions.SendMediaByUrl(baseUrl, link, MediaFunctions.Audio, thisChatId, thisMessageId, "", true)
-		} else {
-			_, err := Functions.AnswerCallbackQuery(baseUrl, query.Id, "Invalid session", false)
-			return nil, err
-		}
+		return Downloader.HandleYoutubeAudio(query.Id, &query.Message)
+
 	case "ytVideo":
-		if link, ok := Globals.VideoLinks[thisMessageId]; ok {
-			Functions.AnswerCallbackQuery(baseUrl, query.Id, "in progress...", true)
-			return MediaFunctions.SendMediaByUrl(baseUrl, link, MediaFunctions.Video, thisChatId, thisMessageId, "", true)
-		} else {
-			_, err := Functions.AnswerCallbackQuery(baseUrl, query.Id, "Invalid session", false)
-			return nil, err
-		}
+		return Downloader.HandleYoutubeVideo(query.Id, &query.Message)
+
 	default:
-		_, err := Functions.AnswerCallbackQuery(baseUrl, query.Id, "Answering Query", true)
+		_, err := Functions.AnswerCallbackQuery(query.Id, "Answering Query", true)
 		return nil, err
+
 	}
 }

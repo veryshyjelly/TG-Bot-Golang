@@ -2,6 +2,7 @@ package Functions
 
 import (
 	"Telegram-Bot/Lib/TgTypes"
+	"Telegram-Bot/Settings"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -22,7 +23,7 @@ type GetChatMemberResult struct {
 	Description string                 `json:"description"`
 }
 
-func GetChatMember(baseUrl string, chatId, userId int64) (*TgTypes.ChatMemberType, error) {
+func GetChatMember(chatId, userId int64) (*TgTypes.ChatMemberType, error) {
 	query, err := json.Marshal(GetChatMemberQuery{
 		ChatId: chatId,
 		UserId: userId,
@@ -31,7 +32,7 @@ func GetChatMember(baseUrl string, chatId, userId int64) (*TgTypes.ChatMemberTyp
 		return nil, err
 	}
 
-	resp, err := http.Post(baseUrl+"/getChatMember", "application/json", bytes.NewBuffer(query))
+	resp, err := http.Post(Settings.BaseUrl+"/getChatMember", "application/json", bytes.NewBuffer(query))
 	if err != nil {
 		return nil, err
 	}

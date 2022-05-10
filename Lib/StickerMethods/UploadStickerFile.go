@@ -2,6 +2,7 @@ package StickerMethods
 
 import (
 	"Telegram-Bot/Lib/TgTypes"
+	"Telegram-Bot/Settings"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -21,7 +22,7 @@ type UploadStickerResult struct {
 	Description string           `json:"description"`
 }
 
-func UploadStickerFile(baseUrl string, userId int64, file *bytes.Buffer) (*TgTypes.FileType, error) {
+func UploadStickerFile(userId int64, file *bytes.Buffer) (*TgTypes.FileType, error) {
 	client := &http.Client{Timeout: time.Minute * 10}
 
 	body := &bytes.Buffer{}
@@ -49,7 +50,7 @@ func UploadStickerFile(baseUrl string, userId int64, file *bytes.Buffer) (*TgTyp
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", baseUrl+"/uploadStickerFile", bytes.NewReader(body.Bytes()))
+	req, err := http.NewRequest("POST", Settings.BaseUrl+"/uploadStickerFile", bytes.NewReader(body.Bytes()))
 	if err != nil {
 		return nil, err
 	}

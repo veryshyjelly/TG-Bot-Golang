@@ -2,7 +2,7 @@ package Downloader
 
 import (
 	"Telegram-Bot/Globals"
-	Functions "Telegram-Bot/Lib/TgFunctions"
+	Functions "Telegram-Bot/Lib/MessageMethods"
 	"Telegram-Bot/Lib/TgTypes"
 	"Telegram-Bot/Settings"
 	"encoding/json"
@@ -10,6 +10,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strconv"
+	"strings"
 )
 
 type YoutubePlayResult struct {
@@ -31,7 +33,7 @@ type YoutubePlayType struct {
 	AudioLink  string `json:"dlmp3"`
 }
 
-func YoutubePlay(baseUrl, query string, chatId, messageId int64) (*TgTypes.MessageType, error) {
+func YoutubePlay(query string, chatId, messageId int64) (*TgTypes.MessageType, error) {
 	resp, err := http.Get("https://violetics.pw/api/media/youtube-play?apikey=" + Settings.VioKey + "&query=" + url.QueryEscape(query))
 	if err != nil {
 		return nil, err
@@ -53,17 +55,24 @@ func YoutubePlay(baseUrl, query string, chatId, messageId int64) (*TgTypes.Messa
 	}
 	result := data.Result
 
-	buttons := make([][]TgTypes.InlineKeyboardButtonType, 0)
+	if res, _ := strconv.ParseFloat(strings.Split(result.SizeMp4, " ")[0], 32); res > 50 {
+		Globals.AudioButton.Url = result.AudioLink
+	} else {
+		Globals.AudioButton.Url = ""
+	}
 
-	row1 := make([]TgTypes.InlineKeyboardButtonType, 0)
-	row1 = append(row1, TgTypes.InlineKeyboardButtonType{Text: "Audio 🎵", CallbackData: "ytAudio"})
-	row1 = append(row1, TgTypes.InlineKeyboardButtonType{Text: "Video 📽️", CallbackData: "ytVideo"})
-	buttons = append(buttons, row1)
-	row2 := make([]TgTypes.InlineKeyboardButtonType, 0)
-	row2 = append(row2, TgTypes.InlineKeyboardButtonType{Text: "Exit", CallbackData: "deleteMessage"})
-	buttons = append(buttons, row2)
+	if res, _ := strconv.ParseFloat(strings.Split(result.SizeMp3, " ")[0], 32); res > 50 {
+		Globals.VideoButton.Url = result.VideoLink
+	} else {
+		Globals.VideoButton.Url = ""
+	}
 
-	buttonMessage, err := Functions.SendButtons(baseUrl, result.Title, chatId, messageId, TgTypes.InlineKeyboardMarkupType{InlineKeyboard: buttons})
+	buttons := [][]TgTypes.InlineKeyboardButtonType{
+		{Globals.AudioButton, Globals.VideoButton},
+		{Globals.ExitButton},
+	}
+
+	buttonMessage, err := Functions.SendButtonImage(result.Thumb, result.Title, chatId, messageId, TgTypes.InlineKeyboardMarkupType{InlineKeyboard: buttons}, true)
 	if err != nil {
 		return nil, err
 	}

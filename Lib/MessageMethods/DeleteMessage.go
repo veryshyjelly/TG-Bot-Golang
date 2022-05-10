@@ -1,6 +1,7 @@
 package MessageMethods
 
 import (
+	"Telegram-Bot/Settings"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -21,7 +22,7 @@ type DeleteResult struct {
 	Description string `json:"description"`
 }
 
-func DeleteMessage(baseUrl string, ChatId int64, messageId int64) (bool, error) {
+func DeleteMessage(ChatId int64, messageId int64) (bool, error) {
 	query, err := json.Marshal(DeleteMessageQuery{
 		ChatId:    ChatId,
 		MessageId: messageId,
@@ -30,7 +31,7 @@ func DeleteMessage(baseUrl string, ChatId int64, messageId int64) (bool, error) 
 		return false, err
 	}
 
-	resp, err := http.Post(baseUrl+"/deleteMessage", "application/json", bytes.NewBuffer(query))
+	resp, err := http.Post(Settings.BaseUrl+"/deleteMessage", "application/json", bytes.NewBuffer(query))
 	if err != nil {
 		return false, err
 	}
@@ -53,8 +54,7 @@ func DeleteMessage(baseUrl string, ChatId int64, messageId int64) (bool, error) 
 	return data.Result, nil
 }
 
-func DelayDelete(baseUrl string, delay int, messageId, chatId int64) (bool, error) {
+func DelayDelete(delay int, messageId, chatId int64) (bool, error) {
 	time.Sleep(time.Second * time.Duration(delay))
-	//fmt.Println("Deleted")
-	return DeleteMessage(baseUrl, chatId, messageId)
+	return DeleteMessage(chatId, messageId)
 }

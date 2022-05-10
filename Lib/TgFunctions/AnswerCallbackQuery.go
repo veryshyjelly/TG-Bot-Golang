@@ -1,6 +1,7 @@
 package Functions
 
 import (
+	"Telegram-Bot/Settings"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -22,7 +23,7 @@ type AnswerCallbackResult struct {
 	Description string `json:"description"`
 }
 
-func AnswerCallbackQuery(baseUrl, queryId, text string, showAlert bool) (bool, error) {
+func AnswerCallbackQuery(queryId, text string, showAlert bool) (bool, error) {
 	query, err := json.Marshal(AnswerCallbackQueryType{
 		CallbackQueryId: queryId,
 		Text:            text,
@@ -32,7 +33,7 @@ func AnswerCallbackQuery(baseUrl, queryId, text string, showAlert bool) (bool, e
 		return false, err
 	}
 
-	resp, err := http.Post(baseUrl+"/answerCallbackQuery", "application/json", bytes.NewBuffer(query))
+	resp, err := http.Post(Settings.BaseUrl+"/answerCallbackQuery", "application/json", bytes.NewBuffer(query))
 	if err != nil {
 		return false, err
 	}

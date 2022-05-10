@@ -6,3 +6,4 @@ const BotName = "Alpha-Daemon-Bot"
 const OwnerId = 1653921867
 const VioKey = "73dc-6d6c-9e3e"
 const Delay = 10
+const BaseUrl = "https://api.telegram.org/bot" + ApiToken

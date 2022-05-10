@@ -2,6 +2,7 @@ package MessageMethods
 
 import (
 	"Telegram-Bot/Lib/TgTypes"
+	"Telegram-Bot/Settings"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -11,7 +12,7 @@ import (
 
 type CopyResult struct {
 	Ok          bool   `json:"ok"`
-	MessageId   int64  `json:"message_id"`
+	Result      int64  `json:"result"`
 	ErrorCode   int    `json:"error_code"`
 	Description string `json:"description"`
 }
@@ -30,7 +31,7 @@ type CopyQuery struct {
 	//ReplyMarkup              InlineKeyboardMarkupType `json:"reply_markup,omitempty"`
 }
 
-func CopyMessage(baseUrl string, chatId, fromChatId, messageId, replyId int64, caption string, isProtected bool) (int64, error) {
+func CopyMessage(chatId, fromChatId, messageId, replyId int64, caption string, isProtected bool) (int64, error) {
 	query, err := json.Marshal(CopyQuery{
 		ChatId:           chatId,
 		FromChatId:       fromChatId,
@@ -44,7 +45,7 @@ func CopyMessage(baseUrl string, chatId, fromChatId, messageId, replyId int64, c
 		return 0, err
 	}
 
-	resp, err := http.Post(baseUrl+"/copyMessage", "application/json", bytes.NewBuffer(query))
+	resp, err := http.Post(Settings.BaseUrl+"/copyMessage", "application/json", bytes.NewBuffer(query))
 	if err != nil {
 		return 0, err
 	}
@@ -64,5 +65,5 @@ func CopyMessage(baseUrl string, chatId, fromChatId, messageId, replyId int64, c
 		return 0, errors.New(data.Description)
 	}
 
-	return data.MessageId, nil
+	return data.Result, nil
 }

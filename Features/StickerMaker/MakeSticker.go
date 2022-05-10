@@ -23,16 +23,16 @@ type CreatedSticker struct {
 	Data []ChatStickerSet `json:"data"`
 }
 
-func MakeSticker(baseUrl string, chatId, messageId int64, message *TgTypes.MessageType) (*TgTypes.MessageType, error) {
+func MakeSticker(chatId, messageId int64, message *TgTypes.MessageType) (*TgTypes.MessageType, error) {
 	if message == nil {
-		return MessageMethods.SendTextMessage(baseUrl, "Where is the image? reply to an image document (uncompressed) or a sticker (static).", chatId, messageId)
+		return MessageMethods.SendTextMessage("Where is the image? reply to an image document (uncompressed) or a sticker (static).", chatId, messageId)
 	}
 
 	var imageLink string
 	var wasSticker bool
 
 	if message.Document.FileId != "" {
-		imagePath, err := Functions.GetFile(baseUrl, message.Document.FileId)
+		imagePath, err := Functions.GetFile(message.Document.FileId)
 		if err != nil {
 			return nil, err
 		}
@@ -40,14 +40,14 @@ func MakeSticker(baseUrl string, chatId, messageId int64, message *TgTypes.Messa
 		imageLink = "https://api.telegram.org/file/bot" + Settings.ApiToken + "/" + url.QueryEscape(imagePath.FilePath)
 	} else if message.Sticker.FileId != "" && !message.Sticker.IsAnimated {
 		wasSticker = true
-		imagePath, err := Functions.GetFile(baseUrl, message.Sticker.FileId)
+		imagePath, err := Functions.GetFile(message.Sticker.FileId)
 		if err != nil {
 			return nil, err
 		}
 
 		imageLink = "https://api.violetics.pw/api/converter/webp-to-image?apikey=" + Settings.VioKey + "&image=https://api.telegram.org/file/bot" + Settings.ApiToken + "/" + url.QueryEscape(imagePath.FilePath)
 	} else {
-		textMessage, err := MessageMethods.SendTextMessage(baseUrl, "Where is the image? reply to an image document (uncompressed) or a sticker (static).", message.Chat.Id, message.MessageId)
+		textMessage, err := MessageMethods.SendTextMessage("Where is the image? reply to an image document (uncompressed) or a sticker (static).", message.Chat.Id, message.MessageId)
 		if err != nil {
 			return textMessage, err
 		}
@@ -76,7 +76,7 @@ func MakeSticker(baseUrl string, chatId, messageId int64, message *TgTypes.Messa
 		return nil, err
 	}
 
-	upStickerFile, err := StickerMethods.UploadStickerFile(baseUrl, message.From.Id, resImage)
+	upStickerFile, err := StickerMethods.UploadStickerFile(message.From.Id, resImage)
 	if err != nil {
 		return nil, err
 	}
@@ -96,18 +96,18 @@ func MakeSticker(baseUrl string, chatId, messageId int64, message *TgTypes.Messa
 	successMessage := "Sticker added to <a href=\"https://t.me/addstickers/" + packName + "\">Pack</a>"
 	failMessage := "Adding of Sticker Failed"
 
-	if set, _ := StickerMethods.GetStickerSet(baseUrl, packName); set != nil {
-		if ok, _ := StickerMethods.AddStickerToSet(baseUrl, packName, upStickerFile.FileId, "😂", stickUserId); ok {
-			return MessageMethods.SendTextMessage(baseUrl, successMessage, message.Chat.Id, message.MessageId)
+	if set, _ := StickerMethods.GetStickerSet(packName); set != nil {
+		if ok, _ := StickerMethods.AddStickerToSet(packName, upStickerFile.FileId, "😂", stickUserId); ok {
+			return MessageMethods.SendTextMessage(successMessage, message.Chat.Id, message.MessageId)
 		} else {
-			return MessageMethods.SendTextMessage(baseUrl, failMessage, message.Chat.Id, message.MessageId)
+			return MessageMethods.SendTextMessage(failMessage, message.Chat.Id, message.MessageId)
 		}
 
 	} else {
-		if ok, _ := StickerMethods.CreateStickerSet(baseUrl, packName, title, "😂", upStickerFile.FileId, stickUserId); ok {
-			return MessageMethods.SendTextMessage(baseUrl, successMessage, message.Chat.Id, message.MessageId)
+		if ok, _ := StickerMethods.CreateStickerSet(packName, title, "😂", upStickerFile.FileId, stickUserId); ok {
+			return MessageMethods.SendTextMessage(successMessage, message.Chat.Id, message.MessageId)
 		} else {
-			return MessageMethods.SendTextMessage(baseUrl, failMessage, message.Chat.Id, message.MessageId)
+			return MessageMethods.SendTextMessage(failMessage, message.Chat.Id, message.MessageId)
 		}
 	}
 }

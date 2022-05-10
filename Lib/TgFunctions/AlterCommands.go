@@ -2,6 +2,7 @@ package Functions
 
 import (
 	"Telegram-Bot/Lib/TgTypes"
+	"Telegram-Bot/Settings"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -29,7 +30,7 @@ type SetCommandsResult struct {
 	Description string `json:"description"`
 }
 
-func SetMyCommands(baseUrl string, commands []TgTypes.BotCommandType, scope string) (bool, error) {
+func SetMyCommands(commands []TgTypes.BotCommandType, scope string) (bool, error) {
 	query, err := json.Marshal(CommandQuery{
 		Commands: commands,
 		scope:    scope,
@@ -38,7 +39,7 @@ func SetMyCommands(baseUrl string, commands []TgTypes.BotCommandType, scope stri
 		return false, err
 	}
 
-	resp, err := http.Post(baseUrl+"/setMyCommands", "application/json", bytes.NewBuffer(query))
+	resp, err := http.Post(Settings.BaseUrl+"/setMyCommands", "application/json", bytes.NewBuffer(query))
 	if err != nil {
 		return false, err
 	}
@@ -61,7 +62,7 @@ func SetMyCommands(baseUrl string, commands []TgTypes.BotCommandType, scope stri
 	return data.Result, nil
 }
 
-func DeleteMyCommands(baseUrl, scope string) (bool, error) {
+func DeleteMyCommands(scope string) (bool, error) {
 	query, err := json.Marshal(CommandQuery{
 		scope: scope,
 	})
@@ -69,7 +70,7 @@ func DeleteMyCommands(baseUrl, scope string) (bool, error) {
 		return false, err
 	}
 
-	resp, err := http.Post(baseUrl+"/deleteMyCommands", "application/json", bytes.NewBuffer(query))
+	resp, err := http.Post(Settings.BaseUrl+"/deleteMyCommands", "application/json", bytes.NewBuffer(query))
 	if err != nil {
 		return false, err
 	}

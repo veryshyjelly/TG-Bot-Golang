@@ -2,6 +2,7 @@ package Functions
 
 import (
 	"Telegram-Bot/Lib/TgTypes"
+	"Telegram-Bot/Settings"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -20,7 +21,7 @@ type GetFileResult struct {
 	Description string           `json:"description"`
 }
 
-func GetFile(baseUrl, fileId string) (*TgTypes.FileType, error) {
+func GetFile(fileId string) (*TgTypes.FileType, error) {
 	query, err := json.Marshal(GetFileQuery{
 		FileId: fileId,
 	})
@@ -28,7 +29,7 @@ func GetFile(baseUrl, fileId string) (*TgTypes.FileType, error) {
 		return nil, err
 	}
 
-	resp, err := http.Post(baseUrl+"/getFile", "application/json", bytes.NewBuffer(query))
+	resp, err := http.Post(Settings.BaseUrl+"/getFile", "application/json", bytes.NewBuffer(query))
 	if err != nil {
 		return nil, err
 	}

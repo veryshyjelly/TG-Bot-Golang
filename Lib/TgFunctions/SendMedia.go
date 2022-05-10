@@ -1,7 +1,8 @@
-package MediaFunctions
+package Functions
 
 import (
 	"Telegram-Bot/Lib/TgTypes"
+	"Telegram-Bot/Settings"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -33,7 +34,7 @@ type SendMediaResult struct {
 	Description string              `json:"description"`
 }
 
-func SendMediaByUrl(baseUrl, Url string, mediaType MediaType, chatId, replyId int64, caption string, isProtected bool) (*TgTypes.MessageType, error) {
+func SendMediaByUrl(Url string, mediaType MediaType, chatId, replyId int64, caption string, isProtected bool) (*TgTypes.MessageType, error) {
 	sendQuery := map[string]interface{}{
 		"chat_id":                              chatId,
 		"caption":                              caption,
@@ -48,7 +49,7 @@ func SendMediaByUrl(baseUrl, Url string, mediaType MediaType, chatId, replyId in
 		return nil, err
 	}
 
-	resp, err := http.Post(baseUrl+string(mediaType), "application/json", bytes.NewBuffer(query))
+	resp, err := http.Post(Settings.BaseUrl+string(mediaType), "application/json", bytes.NewBuffer(query))
 	if err != nil {
 		return nil, err
 	}
@@ -71,11 +72,12 @@ func SendMediaByUrl(baseUrl, Url string, mediaType MediaType, chatId, replyId in
 	return &data.Result, nil
 }
 
-func SendMedia(baseUrl, mediaPath string, mediaType MediaType, chatId, replyId int64, caption string, isProtected bool) (*TgTypes.MessageType, error) {
+func SendMedia(mediaPath string, mediaType MediaType, chatId, replyId int64, caption string, isProtected bool) (*TgTypes.MessageType, error) {
 	client := &http.Client{Timeout: time.Minute * 20}
 
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
+
 	file, err := os.Open(mediaPath)
 	if err != nil {
 		return nil, err
@@ -113,7 +115,7 @@ func SendMedia(baseUrl, mediaPath string, mediaType MediaType, chatId, replyId i
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", baseUrl+string(mediaType), bytes.NewReader(body.Bytes()))
+	req, err := http.NewRequest("POST", Settings.BaseUrl+string(mediaType), bytes.NewReader(body.Bytes()))
 	if err != nil {
 		return nil, err
 	}
