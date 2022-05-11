@@ -19,12 +19,12 @@ type VioFeatureType struct {
 }
 
 type VioEndPointType struct {
-	Name         string      `json:"name"`
-	Title        string      `json:"title"`
-	Path         string      `json:"path"`
-	Methods      []string    `json:"methods"`
-	Params       interface{} `json:"params"`
-	HostnamePath string      `json:"hostname_path"`
+	Name         string                 `json:"name"`
+	Title        string                 `json:"title"`
+	Path         string                 `json:"path"`
+	Methods      []string               `json:"methods"`
+	Params       map[string]interface{} `json:"params"`
+	HostnamePath string                 `json:"hostname_path"`
 }
 
 func ParseVioApi() error {

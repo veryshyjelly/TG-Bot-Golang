@@ -14,6 +14,10 @@ var (
 		Text:         "Video 📽️",
 		CallbackData: "ytVideo",
 	}
+	YtLinkButton = TgTypes.InlineKeyboardButtonType{
+		Text:         "Get Links",
+		CallbackData: "ytLinks",
+	}
 	ExitButton = TgTypes.InlineKeyboardButtonType{
 		Text:         "Exit",
 		CallbackData: "deleteMessage",
@@ -25,6 +29,14 @@ var (
 	FilterButton = TgTypes.InlineKeyboardButtonType{
 		Text:         "Filter",
 		CallbackData: "filterMenu",
+	}
+	PhotoButton = TgTypes.InlineKeyboardButtonType{
+		Text:         "Photo",
+		CallbackData: "photoMenu",
+	}
+	YoutubeButton = TgTypes.InlineKeyboardButtonType{
+		Text:         "Youtube",
+		CallbackData: "youtubeMenu",
 	}
 	BackButton = TgTypes.InlineKeyboardButtonType{
 		Text:         "Back",

@@ -7,17 +7,16 @@ import (
 	"Telegram-Bot/Settings"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strconv"
-	"strings"
 )
 
 type YoutubePlayResult struct {
 	Status  int             `json:"status"`
-	Result  YoutubePlayType `json:"result"`
-	Message []string        `json:"message"`
+	Result  YoutubePlayType `json:"result,omitempty"`
+	Message interface{}     `json:"message"`
 }
 
 type YoutubePlayType struct {
@@ -34,6 +33,9 @@ type YoutubePlayType struct {
 }
 
 func YoutubePlay(query string, chatId, messageId int64) (*TgTypes.MessageType, error) {
+	if query == "" {
+		return Functions.SendTextMessage("query is empty. Add keywords or youtube link after command.", chatId, messageId)
+	}
 	resp, err := http.Get("https://violetics.pw/api/media/youtube-play?apikey=" + Settings.VioKey + "&query=" + url.QueryEscape(query))
 	if err != nil {
 		return nil, err
@@ -51,25 +53,16 @@ func YoutubePlay(query string, chatId, messageId int64) (*TgTypes.MessageType, e
 	}
 
 	if !(data.Status == 200) {
-		return nil, errors.New(data.Message[0])
+		return nil, errors.New(fmt.Sprint(data.Message))
 	}
 	result := data.Result
 
-	if res, _ := strconv.ParseFloat(strings.Split(result.SizeMp4, " ")[0], 32); res > 50 {
-		Globals.AudioButton.Url = result.AudioLink
-	} else {
-		Globals.AudioButton.Url = ""
-	}
-
-	if res, _ := strconv.ParseFloat(strings.Split(result.SizeMp3, " ")[0], 32); res > 50 {
-		Globals.VideoButton.Url = result.VideoLink
-	} else {
-		Globals.VideoButton.Url = ""
-	}
+	Globals.AudioButton.Url = ""
+	Globals.VideoButton.Url = ""
 
 	buttons := [][]TgTypes.InlineKeyboardButtonType{
 		{Globals.AudioButton, Globals.VideoButton},
-		{Globals.ExitButton},
+		{Globals.YtLinkButton, Globals.ExitButton},
 	}
 
 	buttonMessage, err := Functions.SendButtonImage(result.Thumb, result.Title, chatId, messageId, TgTypes.InlineKeyboardMarkupType{InlineKeyboard: buttons}, true)

@@ -26,7 +26,9 @@ func main() {
 		for _, messages := range response {
 			go func(messages TgTypes.UpdateType) {
 				fmt.Println(messages)
-				_, err = Handlers.HandleCommand(&messages.Message)
+				if messages.Message.MessageId != 0 {
+					_, err = Handlers.HandleCommand(&messages.Message)
+				}
 				if err != nil {
 					log.Println(err)
 				}

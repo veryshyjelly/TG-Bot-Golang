@@ -5,22 +5,23 @@ import (
 	"Telegram-Bot/Features/Autoresponder"
 	"Telegram-Bot/Features/Downloader"
 	"Telegram-Bot/Features/PhotoFilter"
+	"Telegram-Bot/Features/Photomaker"
 	"Telegram-Bot/Features/StickerMaker"
 	"Telegram-Bot/Lib/MessageMethods"
 	"Telegram-Bot/Lib/StickerMethods"
 	Functions "Telegram-Bot/Lib/TgFunctions"
 	"Telegram-Bot/Lib/TgTypes"
 	"Telegram-Bot/Settings"
-	"strings"
 )
 
 func HandleCommand(message *TgTypes.MessageType) (*TgTypes.MessageType, error) {
+	if message == nil {
+		return nil, nil
+	}
+
 	thisChatId, thisMessageId, textBody, command, joinedArgument := Functions.ParseMessage(message)
 	var err error
 
-	if strings.ToLower(message.Text) == "hi bot" {
-		_, err = MessageMethods.SendTextMessage("I made this bot from scratch", thisChatId, thisMessageId)
-	}
 	switch command {
 	case "":
 		err = Autoresponder.FilterMessage(textBody, thisChatId, thisMessageId, Settings.Delay)
@@ -38,7 +39,7 @@ func HandleCommand(message *TgTypes.MessageType) (*TgTypes.MessageType, error) {
 		return Autoresponder.ReactionList(message)
 
 	case "sticker", "sticker" + Settings.BotId:
-		return StickerMaker.MakeSticker(thisChatId, thisMessageId, message.ReplyToMessage)
+		return StickerMaker.MakeSticker(thisChatId, thisMessageId, message.ReplyToMessage, joinedArgument)
 
 	case "photo", "photo" + Settings.BotId:
 		return PhotoFilter.StickerToImage(thisChatId, thisMessageId, message.ReplyToMessage)
@@ -48,6 +49,9 @@ func HandleCommand(message *TgTypes.MessageType) (*TgTypes.MessageType, error) {
 
 	case "pfilter", "pfilter" + Settings.BotId:
 		return PhotoFilter.HandleFilterPrompt(message)
+
+	case "pmaker", "pmaker" + Settings.BotId:
+		return Photomaker.HandlePMakerPrompt(message)
 
 	case "remove", "remove" + Settings.BotId:
 		USER, err := Functions.GetChatMember(thisChatId, message.From.Id)

@@ -39,9 +39,8 @@ func RemoveSticker(chatId int64, messageId int64, repliedMessage *TgTypes.Messag
 		return false, err
 	}
 
-	//fmt.Println(repliedMessage.Sticker.SetName)
-	if repliedMessage.Sticker.SetName != "x"+fmt.Sprint(uint64(repliedMessage.Chat.Id))+"_by_AB22TGBot" {
-		_, err := MessageMethods.SendTextMessage("The pack is not of this group.", chatId, messageId)
+	if repliedMessage.Sticker.SetName != "x"+fmt.Sprint(uint64(repliedMessage.Chat.Id-int64(Settings.BotUserId)))+"_by_"+Settings.BotId[1:] {
+		_, err := MessageMethods.SendTextMessage("The pack is not of this group or not made by this bot.", chatId, messageId)
 		return false, err
 	}
 

@@ -54,6 +54,10 @@ LOOP:
 
 					if filters.FileType != "message" {
 						repliedMessage, err = Functions.SendMediaByUrl(filters.FileId, sendMode, chatId, messageId, "", true)
+						if err != nil {
+							return err
+						}
+
 						respondId = repliedMessage.MessageId
 					}
 

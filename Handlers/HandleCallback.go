@@ -4,6 +4,7 @@ import (
 	"Telegram-Bot/Features"
 	"Telegram-Bot/Features/Downloader"
 	"Telegram-Bot/Features/PhotoFilter"
+	"Telegram-Bot/Features/Photomaker"
 	"Telegram-Bot/Lib/MessageMethods"
 	Functions "Telegram-Bot/Lib/TgFunctions"
 	"Telegram-Bot/Lib/TgTypes"
@@ -20,6 +21,12 @@ func HandleCallback(query *TgTypes.CallbackQueryType) (*TgTypes.MessageType, err
 	case "filterMenu":
 		return Features.FilterMenu(query.Id, &query.Message)
 
+	case "photoMenu":
+		return Features.PhotoMenu(query.Id, &query.Message)
+
+	case "youtubeMenu":
+		return Features.YoutubePlayMenu(query.Id, &query.Message)
+
 	case "deleteMessage":
 		_, err := MessageMethods.DeleteMessage(query.Message.Chat.Id, query.Message.MessageId)
 		return nil, err
@@ -29,6 +36,9 @@ func HandleCallback(query *TgTypes.CallbackQueryType) (*TgTypes.MessageType, err
 
 	case "ytVideo":
 		return Downloader.HandleYoutubeVideo(query.Id, &query.Message)
+
+	case "ytLinks":
+		return Downloader.HandleYoutubeLinks(query.Id, &query.Message)
 
 	case "GoBack":
 		return Features.BackMenu(query.Id, &query.Message)
@@ -47,6 +57,11 @@ func HandleCallback(query *TgTypes.CallbackQueryType) (*TgTypes.MessageType, err
 		case "photoFilter":
 			return PhotoFilter.HandlePhotoFilter(x[1], query.Id, &query.Message)
 
+		case "pMaker":
+			return Photomaker.HandlePhotoMaker(x[1], query.Id, &query.Message)
+
+		case "pMakerNext":
+			return Photomaker.HandlePMakerNext(x[1], query.Id, &query.Message)
 		}
 
 		return nil, nil

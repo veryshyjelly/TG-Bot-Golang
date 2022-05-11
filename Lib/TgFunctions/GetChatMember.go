@@ -6,7 +6,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -48,7 +47,7 @@ func GetChatMember(chatId, userId int64) (*TgTypes.ChatMemberType, error) {
 		return nil, err
 	}
 
-	fmt.Println(string(body))
+	//fmt.Println(string(body))
 	if !data.Ok {
 		return nil, err
 	}

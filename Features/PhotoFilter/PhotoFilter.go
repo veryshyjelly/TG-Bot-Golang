@@ -3,12 +3,9 @@ package PhotoFilter
 import (
 	"Telegram-Bot/Globals"
 	"Telegram-Bot/Lib/MessageMethods"
-	"Telegram-Bot/Lib/StickerMethods"
 	Functions "Telegram-Bot/Lib/TgFunctions"
 	"Telegram-Bot/Lib/TgTypes"
 	"Telegram-Bot/Settings"
-	"bytes"
-	"io"
 	"net/http"
 	"net/url"
 )
@@ -29,23 +26,15 @@ func HandlePhotoFilter(filter, queryId string, message *TgTypes.MessageType) (*T
 			return nil, err
 		}
 
-		data := new(bytes.Buffer)
-		_, err = io.Copy(data, res.Body)
-
+		m, err := Functions.SendMediaByIO(res.Body, filter+".png", Functions.Document, message.Chat.Id, message.ReplyToMessage.MessageId, filter, false)
 		if err != nil {
 			return nil, err
 		}
 
-		upFileLink, err := StickerMethods.UploadStickerFile(Settings.OwnerId, data)
+		_, err = MessageMethods.DeleteMessage(message.Chat.Id, message.MessageId)
+		delete(Globals.PhotoFilterQueue, message.MessageId)
 
-		m, err := Functions.SendMediaByUrl(upFileLink.FileId, Functions.Document, message.Chat.Id, message.ReplyToMessage.MessageId, filter, false)
-		if err != nil {
-			return nil, err
-		}
-
-		MessageMethods.DeleteMessage(message.Chat.Id, message.MessageId)
-
-		return m, nil
+		return m, err
 
 	} else {
 
