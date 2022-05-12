@@ -84,11 +84,14 @@ func SendMedia(mediaPath string, mediaType MediaType, chatId, replyId int64, cap
 	}
 
 	sendQuery := map[string]interface{}{
-		"chat_id":             chatId,
-		"caption":             caption,
-		"parse_mode":          "HTML",
-		"protect_content":     isProtected,
-		"reply_to_message_id": replyId,
+		"chat_id":         chatId,
+		"caption":         caption,
+		"parse_mode":      "HTML",
+		"protect_content": isProtected,
+	}
+
+	if replyId != 0 {
+		sendQuery["reply_to_message_id"] = replyId
 	}
 
 	for k, v := range sendQuery {
@@ -151,11 +154,14 @@ func SendMediaByIO(reader io.Reader, name string, mediaType MediaType, chatId, r
 	writer := multipart.NewWriter(body)
 
 	sendQuery := map[string]interface{}{
-		"chat_id":             chatId,
-		"caption":             caption,
-		"parse_mode":          "HTML",
-		"protect_content":     isProtected,
-		"reply_to_message_id": replyId,
+		"chat_id":         chatId,
+		"caption":         caption,
+		"parse_mode":      "HTML",
+		"protect_content": isProtected,
+	}
+
+	if replyId != 0 {
+		sendQuery["reply_to_message_id"] = replyId
 	}
 
 	for k, v := range sendQuery {

@@ -14,12 +14,16 @@ import (
 )
 
 func HandlePhotoMaker(option, queryId string, message *TgTypes.MessageType) (*TgTypes.MessageType, error) {
-	if message == nil {
+	var myMessage TgTypes.MessageType
+
+	if message == nil || queryId == "" || option == "" {
 		_, err := Functions.AnswerCallbackQuery(queryId, "Invalid session", false)
 		return nil, err
+	} else {
+		myMessage = *message
 	}
 
-	if photoId, ok := Globals.PhotoFilterQueue[message.MessageId]; ok {
+	if photoId, ok := Globals.PhotoFilterQueue[myMessage.MessageId]; ok {
 
 		imagePath, err := Functions.GetFile(photoId)
 		if err != nil {
@@ -41,18 +45,18 @@ func HandlePhotoMaker(option, queryId string, message *TgTypes.MessageType) (*Tg
 				return nil, err
 			}
 
-			_, err = Functions.AnswerCallbackQuery(queryId, fmt.Sprint(errData["message"]), true)
+			_, err = Functions.AnswerCallbackQuery(queryId, fmt.Sprint(errData["myMessage"]), true)
 			return nil, err
 		}
 
 		Functions.AnswerCallbackQuery(queryId, "in progress...", true)
 
-		m, err := Functions.SendMediaByIO(res.Body, option+".png", Functions.Document, message.Chat.Id, message.ReplyToMessage.MessageId, option, false)
+		m, err := Functions.SendMediaByIO(res.Body, option+".png", Functions.Document, myMessage.Chat.Id, 0, option, false)
 		if err != nil {
 			return nil, err
 		}
 
-		_, err = MessageMethods.DeleteMessage(message.Chat.Id, message.MessageId)
+		_, err = MessageMethods.DeleteMessage(myMessage.Chat.Id, myMessage.MessageId)
 
 		return m, err
 
