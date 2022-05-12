@@ -56,7 +56,7 @@ func YoutubePlayMenu(CallBackId string, message *TgTypes.MessageType) (*TgTypes.
 
 func PhotoMenu(CallBackId string, message *TgTypes.MessageType) (*TgTypes.MessageType, error) {
 	text := "Photo\n\nYou can apply many beautiful filters and effects to your own photos and images. The process is automatic just reply the image and select filter to get modified image.\n\n"
-	text += "Commands:\n<code>/photo &lt;reply to sticker&gt;</code>: get image file from sticker.\n<code>/pfilter &lt;reply to image&gt;</code>: apply filters to your images\n\n"
+	text += "Commands:\n<code>/photo &lt;reply to sticker&gt;</code>: get image file from sticker.\n<code>/pfilter &lt;reply to image&gt;</code>: apply filters to your images\n<code>/pmaker &lt;reply to image&gt;</code>: make awesome new photos from photo.\n\n"
 	Functions.AnswerCallbackQuery(CallBackId, "", false)
 
 	buttons := [][]TgTypes.InlineKeyboardButtonType{

@@ -72,25 +72,19 @@ func HandleYoutubeVideo(queryId string, message *TgTypes.MessageType) (*TgTypes.
 }
 
 func HandleYoutubeLinks(queryId string, message *TgTypes.MessageType) (*TgTypes.MessageType, error) {
-	if link, ok := Globals.AudioLinks[message.MessageId]; ok {
+	if _, ok := Globals.AudioLinks[message.MessageId]; ok {
 		Functions.AnswerCallbackQuery(queryId, "", true)
 
-		Globals.AudioButton.Url = Globals.AudioLinks[message.MessageId]
-		Globals.VideoButton.Url = Globals.VideoLinks[message.MessageId]
+		myAudioButton, myVideoButton := Globals.AudioButton, Globals.VideoButton
+		myAudioButton.Url, myVideoButton.Url = Globals.AudioLinks[message.MessageId], Globals.VideoLinks[message.MessageId]
 
 		buttons := [][]TgTypes.InlineKeyboardButtonType{
-			{Globals.AudioButton, Globals.VideoButton},
+			{myAudioButton, myVideoButton},
 			{Globals.YtLinkButton, Globals.ExitButton},
 		}
 
-		_, err := MessageMethods.EditMessageMarkup(message.Chat.Id, message.MessageId,
+		return MessageMethods.EditMessageMarkup(message.Chat.Id, message.MessageId,
 			TgTypes.InlineKeyboardMarkupType{InlineKeyboard: buttons}, "")
-
-		if err != nil {
-			return nil, err
-		}
-
-		return Functions.SendMediaByUrl(link, Functions.Audio, message.Chat.Id, message.MessageId, "", true)
 
 	} else {
 

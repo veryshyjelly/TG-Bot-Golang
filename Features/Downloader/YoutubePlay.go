@@ -57,9 +57,6 @@ func YoutubePlay(query string, chatId, messageId int64) (*TgTypes.MessageType, e
 	}
 	result := data.Result
 
-	Globals.AudioButton.Url = ""
-	Globals.VideoButton.Url = ""
-
 	buttons := [][]TgTypes.InlineKeyboardButtonType{
 		{Globals.AudioButton, Globals.VideoButton},
 		{Globals.YtLinkButton, Globals.ExitButton},

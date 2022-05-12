@@ -28,8 +28,10 @@ func PMakerButtons(offset int) TgTypes.InlineKeyboardMarkupType {
 	}
 
 	row := make([]TgTypes.InlineKeyboardButtonType, 0)
-	if offset > 15 {
+	if initialOffset > 15 {
 		row = append(row, TgTypes.InlineKeyboardButtonType{Text: "Back", CallbackData: "pMakerNext " + strconv.Itoa(initialOffset-15)})
+	} else if initialOffset > 0 {
+		row = append(row, TgTypes.InlineKeyboardButtonType{Text: "Back", CallbackData: "pMakerNext " + strconv.Itoa(0)})
 	}
 	row = append(row, Globals.ExitButton)
 	if offset < dataSize {
