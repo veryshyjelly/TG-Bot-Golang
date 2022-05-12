@@ -14,6 +14,11 @@ import (
 )
 
 func HandlePhotoMaker(option, queryId string, message *TgTypes.MessageType) (*TgTypes.MessageType, error) {
+	if message == nil {
+		_, err := Functions.AnswerCallbackQuery(queryId, "Invalid session", false)
+		return nil, err
+	}
+
 	if photoId, ok := Globals.PhotoFilterQueue[message.MessageId]; ok {
 
 		imagePath, err := Functions.GetFile(photoId)
@@ -48,7 +53,6 @@ func HandlePhotoMaker(option, queryId string, message *TgTypes.MessageType) (*Tg
 		}
 
 		_, err = MessageMethods.DeleteMessage(message.Chat.Id, message.MessageId)
-		delete(Globals.PhotoFilterQueue, message.MessageId)
 
 		return m, err
 

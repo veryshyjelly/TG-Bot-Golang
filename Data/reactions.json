@@ -402,7 +402,13 @@
 		},
 		{
 			"chat_id": -1001492156951,
-			"filters": []
+			"filters": [
+				{
+					"file_id": "549",
+					"trigger": "hi",
+					"file_type": "message"
+				}
+			]
 		}
 	]
 }
